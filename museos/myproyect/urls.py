@@ -10,5 +10,5 @@ urlpatterns = patterns('',
 	url(r'^logout', 'museos.views.logoutView'),
     url(r'^authenticate', 'museos.views.loginPost'),
     url(r'^annotated', 'museos.views.templateView'),
-    url(r'^(.*)', 'museos.views.contentPage'),
+    url(r'^(.*)', 'museos.views.getMuseums'),
 )

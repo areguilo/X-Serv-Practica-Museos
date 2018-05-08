@@ -17,10 +17,11 @@ class Museum(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=32)
     museum = models.ManyToManyField(Museum)
-    color = models.CharField(max_length=16)
-    background= models.CharField(max_length=32)
     title= models.CharField(max_length=32)
     size = models.IntegerField()
+    color = models.CharField(max_length=16)
+    background= models.CharField(max_length=32)
+
 
     def __str__(self):
         return self.name
