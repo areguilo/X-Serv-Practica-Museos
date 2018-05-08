@@ -36,14 +36,16 @@ def mainPage(request):
     museums_in_order = museumsInOrder()
     template = get_template('index.html')
     if request.user.is_authenticated():
-        response = '<ul><h2>'
+        response = '<h2>Hi ' + request.user.username +  ' <a href=http://localhost:8000/logout>logout</a></h2>'
+        response += '<ul><h2>'
         for museum in museums_in_order:
             object = museums.get(name=museum[0])
             link = object.mail
             name = object.name
             adress = object.location
-            response = response + '<li><a href=' + link + '>' + name + 'direccion: '+ adress +'</a></li>'
-        response = response + '</ul></h2>'
+            response = response + '<li><a href=' + link + '>' + name + '</a></li>'
+            response += 'adress: '+ adress + '<br><br>'
+        response += '</ul></h2>'
         return HttpResponse(response)
     else:
         return HttpResponse('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
