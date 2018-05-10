@@ -18,14 +18,34 @@
           margin-right: 0px;
           <!-- esto mas adelante sera pasado a la template -->
         }
+
         div.a{position: relative;
         margin-left: 500px;
         background-color: pink;
-        bottom: 100px}
+        bottom: 100px
+        }
+
         div.b{position: relative;
         margin-left: 100px;
         background-color: green;
-        bottom: 50px}
+        bottom: 50px
+        }
+
+        a.boton_1{
+        text-decoration: none;
+        padding: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: helvetica;
+        font-weight: 300;
+        font-size: 25px;
+        font-style: italic;
+        color: #006505;
+        background-color: #82b085;
+        border-radius: 15px;
+        border: 3px double #006505;
+        }
+
     </style>
     </head>
     <body bgcolor=#D8B9C8>
@@ -43,5 +63,7 @@
         <div class="b">
             <h2><a href="http://localhost:8000/about">about</a></h2>
         </div>
+
+        <a href="" class="boton_1">{{accessibles}}</a>
     </body>
 </html>

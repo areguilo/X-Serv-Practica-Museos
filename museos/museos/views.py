@@ -23,14 +23,17 @@ def printMuseums(museums, museums_to_print, string):
         object = museums.get(name=museum[0])
         link = object.email
         museum_name = object.name
+        museum_id = object.museum_id
         adress = object.location
         string += '<li><a href=' + link + '>' + museum_name + '</a></li>'
         string += 'adress: '+ adress + '<br>'
-        string += '<a href=http://localhost:8000/'+ museum_name +'>more info</a><br><br>'
+        string += '<a href=http://localhost:8000/museos/'+ str(museum_id) +'>more info</a><br><br>'
     string += '</ul></h2>'
     return string
 
 def mainPage(request):
+    #boton sacado de https://www.aprenderaprogramar.com/index.php?option=com_content&view=article&id=539:formularios-html-botones-envio-submit-restablecimiento-reset-imagen-y-contenido-button-cu00724b&catid=69&Itemid=192
+    accessibles = False
     username = request.user.username
     all_museums = Museum.objects.all()
     museums_in_order = museumsInOrder(all_museums)
@@ -43,7 +46,7 @@ def mainPage(request):
         response = printMuseums(all_museums, museums_in_order, response)
     else:
         response = ('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
-    return HttpResponse(template.render(Context({'response':response})))
+    return HttpResponse(template.render(Context({'response':response, 'accessibles':accessibles})))
 
 def personalPage(request, name):
     user = User.objects.filter(name = name)
@@ -63,10 +66,16 @@ def personalPage(request, name):
     else:
         return HttpResponse('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
 
-#def museumsPage(request, name)
+def museumPage(request, identifier):
+    museum = Museum.objects.all().get(museum_id=identifier)
+    description = museum.description
+    response = description
+    response += "<a href=http://localhost:8000/> Return to Main Page </a></h2>"
+    return HttpResponse(response)
+
 
 def about(response):
-    return HttpResponse("p<a href=http://localhost:8000/> Return to Main Page </a></h2>")
+    return HttpResponse("practica de alejandro reguilon escalona <a href=http://localhost:8000/> Return to Main Page </a></h2>")
 
 def loginPost(request):
     loginForm = ("""<html><body><form action="/login" method = "POST">

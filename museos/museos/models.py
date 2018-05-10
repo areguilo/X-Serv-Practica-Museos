@@ -3,6 +3,7 @@ from django.utils import timezone
 # Create your models here.
 
 class Museum(models.Model):
+    museum_id = models.IntegerField()
     name = models.CharField(max_length=32)
     location = models.CharField(max_length=32)
     province = models.TextField()
