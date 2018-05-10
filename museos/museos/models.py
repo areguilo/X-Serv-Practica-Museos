@@ -10,6 +10,7 @@ class Museum(models.Model):
     tlfn = models.IntegerField()
     fax = models.CharField(max_length=32)
     mail = models.CharField(max_length=32)
+    accesible = models.TextField()
 
     def __str__(self):
         return self.name
