@@ -8,8 +8,7 @@ from django.template import Context
 import operator
 # Create your views here.
 
-def museumsInOrder():
-    museums = Museum.objects.all()
+def museumsInOrder(museums):
     #print (museums)
     #print (museums[3].comment_set.count()) #me dice numero de comentarios que tiene el museo
     list = {}
@@ -19,30 +18,56 @@ def museumsInOrder():
     in_order = sorted(list.items(),key = operator.itemgetter(1), reverse = True)
     return in_order
 
+def printMuseums(museums, museums_to_print, string):
+    for museum in museums_to_print:
+        object = museums.get(name=museum[0])
+        link = object.email
+        museum_name = object.name
+        adress = object.location
+        string += '<li><a href=' + link + '>' + museum_name + '</a></li>'
+        string += 'adress: '+ adress + '<br>'
+        string += '<a href=http://localhost:8000/'+ museum_name +'>more info</a><br><br>'
+    string += '</ul></h2>'
+    return string
+
 def mainPage(request):
-    museums = Museum.objects.all()
-    museums_in_order = museumsInOrder()
+    username = request.user.username
+    all_museums = Museum.objects.all()
+    museums_in_order = museumsInOrder(all_museums)
+    print (museums_in_order)
     template = get_template('mainpage.html')
     if request.user.is_authenticated():
-        response = '<h2>Hi ' + request.user.username +  ' <a href=http://localhost:8000/logout>logout</a></h2>'
+        response = '<h2>Hi ' + username +  ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
+        response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
         response += '<ul><h2>'
-        for museum in museums_in_order:
-            object = museums.get(name=museum[0])
-            link = object.mail
-            name = object.name
-            adress = object.location
-            response = response + '<li><a href=' + link + '>' + name + '</a></li>'
-            response += 'adress: '+ adress + '<br>'
-            response += 'aquí va el enlace<br><br>'
-        response += '</ul></h2>'
+        response = printMuseums(all_museums, museums_in_order, response)
+    else:
+        response = ('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
+    return HttpResponse(template.render(Context({'response':response})))
+
+def personalPage(request, name):
+    user = User.objects.filter(name = name)
+    username = str(user[0])
+    all_museums = Museum.objects.all()
+    user_museums = Museum.objects.filter(user=user)
+    user_museums_in_order = museumsInOrder(user_museums)
+    #print (all_museums)
+    #print (user_museums)
+    #print (user_museums_in_order)
+    template = get_template('user_template.html')
+    if request.user.is_authenticated():
+        response = '<ul><h2>'
+        response = printMuseums(all_museums, user_museums_in_order, response)
+        response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br>"
         return HttpResponse(template.render(Context({'response':response})))
     else:
         return HttpResponse('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
-#def userParametres():
-    #title = User.
-    #size
-    #color
-    #background
+
+#def museumsPage(request, name)
+
+def about(response):
+    return HttpResponse("p<a href=http://localhost:8000/> Return to Main Page </a></h2>")
+
 def loginPost(request):
     loginForm = ("""<html><body><form action="/login" method = "POST">
     Username:<br>
