@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Museum, Comment, UserData
+from .models import Museum, Comment, UserMuseum, Preference
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -42,30 +42,48 @@ def accessibles (request, museos):
         all_museums = museos
     return all_museums, metodo
 
+def userPages():
+    users = User.objects.all()
+    list='Enlaces paginas disponibles: <br><ul>'
+    print(users)
+    for user in users:
+        try:
+            user_preference = Preference.objects.get(user=user)
+            title = user_preference.title
+        except Preference.DoesNotExist:
+            title = 'pagina de ' + user.username
+        list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a><br></li>'
+    list += '</ul>'
+    return list
+
 @csrf_exempt
 def mainPage(request):
     #boton sacado de https://www.aprenderaprogramar.co/home/alumnos/areguilo/pfinal1/X-Serv-Practica-Museos/museos',
+    userPages()
     museos = Museum.objects.all()
     [all_museums, metodo] = accessibles(request, museos)
     username = request.user.username
     museums_in_order = museumsInOrder(all_museums)
     template = get_template('mainpage.html')
     if request.user.is_authenticated():
+        auth = True
         response = '<h2>Hi ' + username
         response += ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
         response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
-        response += '<ul><h2>'
-        response = printMainPageMuseums(all_museums, museums_in_order, response)
     else:
+        auth = False
         response = ('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
-    return HttpResponse(template.render(Context({'response':response, 'metodo':metodo})))
+    response += '<ul><h2>'
+    response = printMainPageMuseums(all_museums, museums_in_order, response)
+    pagperdis = userPages()
+    return HttpResponse(template.render(Context({'response':response, 'metodo':metodo, 'auth':auth, 'pagperdis':pagperdis})))
 
 @csrf_exempt
-def personalPage(request, name):
+def personalPage(request, identifier):
     #######################################
     template = get_template('user_template.html')
-    user = request.user
-    user_preferences = UserData.objects.filter(user=user)
+    user = User.objects.get(id=identifier)
+    user_preferences = UserMuseum.objects.filter(user=user)
     response='<ul><h2>'
     for preference in user_preferences:
         fav_museum = Museum.objects.get(name=preference.museums)

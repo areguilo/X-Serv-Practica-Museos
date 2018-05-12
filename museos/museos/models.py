@@ -17,21 +17,27 @@ class Museum(models.Model):
     def __str__(self):
         return self.name
 
-class UserData(models.Model):
-    user = models.ForeignKey(User, related_name="user") #nombre de la relacion inversa para volver de User a UserData
-    title= models.CharField(max_length=32)
-    size = models.IntegerField()
-    color = models.CharField(max_length=16)
-    background= models.CharField(max_length=32)
+class UserMuseum(models.Model):
+    user = models.ForeignKey(User, related_name="user") #nombre de la relacion inversa para volver de User a UserMuseum
     museums = models.OneToOneField(Museum)
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.user.username
 
+class Preference(models.Model):
+    user = models.ForeignKey(User)
+    title= models.CharField(max_length=32)
+    size = models.IntegerField()
+    color = models.CharField(max_length=16)
+    background= models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.user.username
+
 class Comment(models.Model):
     text = models.TextField()
-    user = models.ForeignKey(UserData)
+    user = models.ForeignKey(UserMuseum)
     museum = models.ForeignKey(Museum)
     date = models.DateTimeField(default=timezone.now)
 

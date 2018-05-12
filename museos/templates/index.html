@@ -5,10 +5,17 @@
 
         <title>Museos</title>
         <style type="text/css">
-        h1, h2, h3 {
+        h1, h2, h3, ppd {
           color: #8A8E27;
           font-weight: normal;
           font-family: Arial, Helvetica, sans-serif;
+        }
+        ppd {
+            width: 70px;
+            position: relative;
+            margin-left: 0px;
+            bottom: 00px
+            border: 1px solid black;
         }
         div {
           width: 70px;
@@ -53,6 +60,7 @@
         {% block content %}
 
         {% endblock %}
+        <ppd >{{pagperdis|safe}}</ppd>
 
     </body>
 </html>

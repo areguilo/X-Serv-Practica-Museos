@@ -10,7 +10,7 @@
     <h2><a href="http://localhost:8000/about">about</a></h2>
 </div>
 
-{% if auth == True %}
+{% if {{auth}} == True %}
     <form method={{metodo}} action=""><input type="hidden" name="button" value="change_accessibles"><input type="submit" value="accessibles"></form>	 
 {% endif %}
 
