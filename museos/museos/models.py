@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Museum(models.Model):
-    museum_id = models.IntegerField()
     name = models.CharField(max_length=32)
     location = models.CharField(max_length=32)
     province = models.TextField()
@@ -12,26 +12,26 @@ class Museum(models.Model):
     tlfn = models.IntegerField()
     fax = models.CharField(max_length=32)
     email = models.CharField(max_length=32)
-    accessibility = models.BooleanField()
+    accessibility = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
-class User(models.Model):
-    name = models.CharField(max_length=32)
-    password = models.CharField(max_length=12)
-    museum = models.ManyToManyField(Museum)
+class UserData(models.Model):
+    user = models.ForeignKey(User, related_name="user") #nombre de la relacion inversa para volver de User a UserData
     title= models.CharField(max_length=32)
     size = models.IntegerField()
     color = models.CharField(max_length=16)
     background= models.CharField(max_length=32)
+    museums = models.OneToOneField(Museum)
+    date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
 class Comment(models.Model):
     text = models.TextField()
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserData)
     museum = models.ForeignKey(Museum)
     date = models.DateTimeField(default=timezone.now)
 

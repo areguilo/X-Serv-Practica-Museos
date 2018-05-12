@@ -1,1 +1,16 @@
-{% extends "mainpage.html" %}
+{% extends "index.html" %}
+{% block content %}
+<h1>MUSEOS</h1>
+
+<strong>
+    {{response | safe}}
+</strong>
+<div class="a" input type="submit" value="Enviar información">
+    <h2><a href="">next 5</a></h2>
+</div>
+<br>
+<div class="b">
+    <h2><a href="http://localhost:8000/about">about</a></h2>
+</div>
+<a href=http://localhost:8000/> Return to Main Page </a>
+{% endblock %}
