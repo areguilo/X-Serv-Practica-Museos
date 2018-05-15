@@ -10,57 +10,66 @@
           font-weight: normal;
           font-family: Arial, Helvetica, sans-serif;
         }
-        ppd {
-            width: 70px;
-            position: relative;
-            margin-left: 0px;
-            bottom: 00px
-            border: 1px solid black;
-        }
+        
         div {
-          width: 70px;
           padding-left:  20px;
           padding-right: 20px;
           border: 1px solid black;
-          margin-right: 0px;
           <!-- esto mas adelante sera pasado a la template -->
         }
-
-        div.a{position: relative;
-        margin-left: 500px;
-        background-color: pink;
-        bottom: 100px
+        .a, .b {
+            width: 70px;
+        }
+        div.ppd {
+            position: fixed;
+            margin-left: 0px;
+            top: 100px;
+            bottom: 00px;
+            border: 0;
+            left: 500px;
+        }
+        div.footer {
+            text-align: center;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: blue;
+            color: white;
+        }
+        div.login {
+            border: 0;
+        }
+        div.a{
+            position: static;
+            background-color: pink;
         }
 
-        div.b{position: relative;
-        margin-left: 100px;
-        background-color: green;
-        bottom: 50px
-        }
-
-        a.boton_1{
-        text-decoration: none;
-        padding: 3px;
-        padding-left: 10px;
-        padding-right: 10px;
-        font-family: helvetica;
-        font-weight: 300;
-        font-size: 25px;
-        font-style: italic;
-        color: #006505;
-        background-color: #82b085;
-        border-radius: 15px;
-        border: 3px double #006505;
+        div.b{
+            position: static;
+            background-color: green;
         }
 
     </style>
     </head>
     <body bgcolor=#D8B9C8>
 
+
+
         {% block content %}
 
         {% endblock %}
-        <ppd >{{pagperdis|safe}}</ppd>
+
+        <div class=ppd >{{pagperdis|safe}}</div>
 
     </body>
+
 </html>
+
+<div class="footer">
+
+    <p>Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid<br>
+        <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default"><font color="red">Museos de la ciudad de Madrid</font></a>
+    </p>
+
+</div>

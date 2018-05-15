@@ -42,16 +42,20 @@ def accessibles (request, museos):
         all_museums = museos
     return all_museums, metodo
 
+def TitleUserPage (user):
+    try:
+        user_preference = Preference.objects.get(user=user)
+        title = user_preference.title
+    except Preference.DoesNotExist:
+        title = 'pagina de ' + user.username
+    return title
+
 def userPages():
     users = User.objects.all()
     list='Enlaces paginas disponibles: <br><ul>'
     print(users)
     for user in users:
-        try:
-            user_preference = Preference.objects.get(user=user)
-            title = user_preference.title
-        except Preference.DoesNotExist:
-            title = 'pagina de ' + user.username
+        title = TitleUserPage(user)
         list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a><br></li>'
     list += '</ul>'
     return list
@@ -68,11 +72,11 @@ def mainPage(request):
     if request.user.is_authenticated():
         auth = True
         response = '<h2>Hi ' + username
-        response += ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
+        #response += ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
         response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
     else:
         auth = False
-        response = ('<h2>Hi unknown client. Please <a href=http://localhost:8000/authenticate>login</a></h2>')
+        response = ('<h2>Hi unknown client.</h2>')
     response += '<ul><h2>'
     response = printMainPageMuseums(all_museums, museums_in_order, response)
     pagperdis = userPages()
@@ -84,7 +88,8 @@ def personalPage(request, identifier):
     template = get_template('user_template.html')
     user = User.objects.get(id=identifier)
     user_preferences = UserMuseum.objects.filter(user=user)
-    response='<ul><h2>'
+    title = TitleUserPage(user)
+    response= title + '<ul><h2>'
     for preference in user_preferences:
         fav_museum = Museum.objects.get(name=preference.museums)
         museum_name = fav_museum.name
@@ -99,7 +104,7 @@ def personalPage(request, identifier):
     #######################################
 
 def museumPage(request, identifier):
-    museum = Museum.objects.all().get(museum_id=identifier)
+    museum = Museum.objects.all().get(id=identifier)
     description = museum.description
     response = description
     response += "<a href=http://localhost:8000/> Return to Main Page </a></h2>"
