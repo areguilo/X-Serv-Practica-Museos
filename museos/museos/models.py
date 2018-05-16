@@ -51,7 +51,7 @@ class Preference(models.Model):
 
 class Comment(models.Model):
     text = models.TextField()
-    user = models.ForeignKey(UserMuseum)
+    user = models.ForeignKey(User)
     museum = models.ForeignKey(Museum)
     date = models.DateTimeField(default=timezone.now)
 

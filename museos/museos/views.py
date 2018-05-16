@@ -68,14 +68,11 @@ def mainPage(request):
     museums = Museum.objects.all()
     if museums.count() == 0:
         xmlparser()
-        museums = Museum.objects,all
-    print("1")
+        museums = Museum.objects.all()
     [all_museums, metodo] = accessibles(request, museums)
     username = request.user.username
-    print("2")
     museums_in_order = museumsInOrder(all_museums)
     template = get_template('mainpage.html')
-    print("3")
     if request.user.is_authenticated():
         auth = True
         response = '<h2>Hi ' + username
@@ -92,11 +89,16 @@ def mainPage(request):
 @csrf_exempt
 def personalPage(request, identifier):
     #######################################
+    auth=False
     template = get_template('user_template.html')
     user = User.objects.get(id=identifier)
     user_preferences = UserMuseum.objects.filter(user=user)
     title = TitleUserPage(user)
     response= title + '<ul><h2>'
+    ####################################
+    #if len(user_preferences)>5:
+    #    print ("yesssssssssss")
+    ####################################
     for preference in user_preferences:
         fav_museum = Museum.objects.get(NOMBRE=preference.museums)
         museum_name = fav_museum.NOMBRE
@@ -110,11 +112,45 @@ def personalPage(request, identifier):
     return HttpResponse(template.render(Context({'response':response})))
     #######################################
 
+@csrf_exempt
 def museumPage(request, identifier):
+    print (type(identifier))
     museum = Museum.objects.all().get(id=identifier)
-    description = museum.description
-    response = description
-    response += "<a href=http://localhost:8000/> Return to Main Page </a></h2>"
+    description = museum.DESCRIPCION
+    user = request.user
+    response = "<strong>"+museum.NOMBRE+": </strong><br>"
+    response += "Description: " + description
+    if request.method == 'GET':
+        #museum = Museum.objects.all().get(id=identifier)
+        CommentForm = ("""<html><body><form action="" method = "POST"><br>
+            Put a comment:<br>
+            <input type="text" name='comment' value=""><br>
+            <input type="submit"value="send"></form></body></html>""")
+
+        LikeButton = ("""<html><body><form method= "POST" action="">
+            <input type="hidden" name="button" value="like">
+            <input type="submit" value="Add to favourites"></form></body></html>""")
+
+        response += CommentForm + LikeButton
+        comments = Comment.objects.filter(museum=museum)
+        response += "<strong>Comments: </strong><br><br>"
+        if len(comments) == 0:
+            response += 'the are no comments to this museum, be the first to comment it!'
+        else:
+            for comment in comments:
+                response += '<li><strong>Comment:"</strong>' + comment.text + '". <strong>Date: </strong>'+ str(comment.date) + '</li><br>'
+    elif request.method == 'POST':
+        if "comment" in request.POST:
+            comment = str(request.POST['comment'])
+            comment = Comment(text=comment, user=user, museum=museum)
+            comment.save()
+            response = "Your comment was correctly added. "
+        else:
+            like = UserMuseum(user=user, museums=museum)
+            like.save()
+            response = "Your like was saved. "
+        response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br><a href=http://localhost:8000/museos/" + str(museum.id) + "> Return to the Museum`s Page </a></h2>"
+        #title = user_preference.title
     return HttpResponse(response)
 
 def about(response):
