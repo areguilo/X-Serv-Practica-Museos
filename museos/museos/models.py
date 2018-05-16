@@ -4,18 +4,32 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Museum(models.Model):
-    name = models.CharField(max_length=32)
-    location = models.CharField(max_length=32)
-    province = models.TextField()
-    postal_code = models.TextField()
-    description = models.TextField()
-    tlfn = models.IntegerField()
-    fax = models.CharField(max_length=32)
-    email = models.CharField(max_length=32)
-    accessibility = models.BooleanField(default=False)
+    ID_ENTIDAD = models.TextField()
+    NOMBRE = models.TextField()
+    DESCRIPCION_ENTIDAD = models.TextField()
+    HORARIO = models.TextField()
+    TRANSPORTE = models.TextField()
+    DESCRIPCION = models.TextField()
+    ACCESIBILIDAD = models.TextField()
+    CONTENT_URL = models.TextField()
+    NOMBRE_VIA = models.TextField()
+    NUM = models.TextField()
+    LOCALIDAD = models.TextField()
+    PROVINCIA = models.TextField()
+    CODIGO_POSTAL  = models.TextField()
+    BARRIO = models.TextField()
+    DISTRITO = models.TextField()
+    COORDENADA_X  = models.TextField()
+    COORDENADA_Y  = models.TextField()
+    LATITUD = models.TextField()
+    LONGITUD = models.TextField()
+    TELEFONO = models.TextField()
+    FAX = models.TextField()
+    EMAIL = models.TextField()
+    TIPO = models.TextField()
 
     def __str__(self):
-        return self.name
+        return self.NOMBRE
 
 class UserMuseum(models.Model):
     user = models.ForeignKey(User, related_name="user") #nombre de la relacion inversa para volver de User a UserMuseum
@@ -33,7 +47,7 @@ class Preference(models.Model):
     background= models.CharField(max_length=32)
 
     def __str__(self):
-        return self.user.username
+        return self.user.user.username
 
 class Comment(models.Model):
     text = models.TextField()

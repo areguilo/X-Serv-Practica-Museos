@@ -13,18 +13,10 @@
 {% if auth == True %}
     <form method={{metodo}} action=""><input type="hidden" name="button" value="change_accessibles"><input type="submit" value="accessibles"></form>
     <div class="login">
-        <form action='/logout' method='GET'>
+        <form action='/logout'>
             <input type="submit" value="Logout">
         </form>
-    </div>	
-{% else %}
-<div class="login">
-    <form action='/login' method='POST'>
-        Username <input type="text" name="username" ><br>
-        Password <input type="password" name="password"><br>
-        <input type="submit" value="Login">
-    </form>
-</div>	 
+    </div>	 
 {% endif %}
 
 <div class="a" input type="submit" value="Enviar información">

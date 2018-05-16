@@ -1,34 +1,36 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Museum, Comment, UserMuseum, Preference
+from .parser import xmlparser
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.template.loader import get_template
 from django.template import Context
+
 import operator
 # Create your views here.
 
 def museumsInOrder(museums):
     list = {}
     for museum in museums:
-        list[museum.name] = museum.comment_set.count()
+        list[museum.NOMBRE] = museum.comment_set.count()
     #ordenamos el diccionario por su clave: (https://www.lawebdelprogramador.com/foros/Python/1524506-solucionado-ordenar-un-diccionario-por-su-clave-o-valor-en-Python.html)
     in_order = sorted(list.items(),key = operator.itemgetter(1), reverse = True)
     return in_order
 
 def printMainPageMuseums(museums, museums_to_print, string):
-    print (museums_to_print)
+    #print (museums_to_print)
     for museum in museums_to_print:
-        object = museums.get(name=museum[0])
-        link = object.email
-        museum_name = object.name
+        object = museums.get(NOMBRE=museum[0])
+        link = object.CONTENT_URL
+        museum_name = object.NOMBRE
         museum_id = object.id
-        adress = object.location
-        string += '<li><a href=' + link + '>' + museum_name + '</a></li>'
-        string += 'adress: '+ adress + '<br>'
-        string += '<a href=http://localhost:8000/museos/'+ str(museum_id) +'>more info</a><br><br>'
-    string += '</ul></h2>'
+        adress = object.NOMBRE_VIA + ", " + object.NUM + ", " + object.LOCALIDAD+ ", "+ object.PROVINCIA + ", " + object.CODIGO_POSTAL+ ", " + object.BARRIO + ", "+ object.DISTRITO
+        string += '<li><a href=' + link +'>' + museum_name + '</a>'
+        string += '<h4> Adress: '+ adress + '</h4>'
+        string += '<h8><a href=http://localhost:8000/museos/'+ str(museum_id) +'>more info</a></h8><br><br>'
+    string += '</ul></li>'
     return string
 
 def accessibles (request, museos):
@@ -36,7 +38,7 @@ def accessibles (request, museos):
         metodo = "GET"
         aviso = str(request.POST['button'])
         if aviso == "change_accessibles":
-            all_museums = museos.filter(accessibility=True)
+            all_museums = museos.filter(ACCESIBILIDAD=1)
     else:
         metodo = "POST"
         all_museums = museos
@@ -53,7 +55,7 @@ def TitleUserPage (user):
 def userPages():
     users = User.objects.all()
     list='Enlaces paginas disponibles: <br><ul>'
-    print(users)
+    #print(users)
     for user in users:
         title = TitleUserPage(user)
         list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a><br></li>'
@@ -63,21 +65,26 @@ def userPages():
 @csrf_exempt
 def mainPage(request):
     #boton sacado de https://www.aprenderaprogramar.co/home/alumnos/areguilo/pfinal1/X-Serv-Practica-Museos/museos',
-    userPages()
-    museos = Museum.objects.all()
-    [all_museums, metodo] = accessibles(request, museos)
+    museums = Museum.objects.all()
+    if museums.count() == 0:
+        xmlparser()
+        museums = Museum.objects,all
+    print("1")
+    [all_museums, metodo] = accessibles(request, museums)
     username = request.user.username
+    print("2")
     museums_in_order = museumsInOrder(all_museums)
     template = get_template('mainpage.html')
+    print("3")
     if request.user.is_authenticated():
         auth = True
         response = '<h2>Hi ' + username
         #response += ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
-        response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
+        #response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
     else:
         auth = False
         response = ('<h2>Hi unknown client.</h2>')
-    response += '<ul><h2>'
+    response += '<ul>'
     response = printMainPageMuseums(all_museums, museums_in_order, response)
     pagperdis = userPages()
     return HttpResponse(template.render(Context({'response':response, 'metodo':metodo, 'auth':auth, 'pagperdis':pagperdis})))
@@ -91,10 +98,10 @@ def personalPage(request, identifier):
     title = TitleUserPage(user)
     response= title + '<ul><h2>'
     for preference in user_preferences:
-        fav_museum = Museum.objects.get(name=preference.museums)
-        museum_name = fav_museum.name
-        email = fav_museum.email
-        adress = fav_museum.location
+        fav_museum = Museum.objects.get(NOMBRE=preference.museums)
+        museum_name = fav_museum.NOMBRE
+        email = fav_museum.CONTENT_URL
+        adress = "fav_museum.location"
         date = str(preference.date)
         response += '<li><a href=' + email + '>' + museum_name + '</a></li>'
         response += 'adress: '+ adress + '<br>' + 'fecha de like: ' + date + '<br>'
@@ -111,8 +118,10 @@ def museumPage(request, identifier):
     return HttpResponse(response)
 
 def about(response):
-    template = get_template('about.html')
-    return HttpResponse(template.render())
+    #template = get_template('about.html')
+    #return HttpResponse(template.render())
+    a=parserXML()
+    return HttpResponse(a)
 
 def loginPost(request):
     loginForm = ("""<html><body><form action="/login" method = "POST">

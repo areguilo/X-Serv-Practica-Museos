@@ -21,12 +21,12 @@
             width: 70px;
         }
         div.ppd {
-            position: fixed;
+            position: absolute;
             margin-left: 0px;
-            top: 100px;
-            bottom: 00px;
-            border: 0;
-            left: 500px;
+            top: 250px;
+            bottom: 0px;
+            border: 1;
+            left: 450px;
         }
         div.footer {
             text-align: center;
@@ -37,8 +37,13 @@
             background-color: blue;
             color: white;
         }
-        div.login {
+        div.login, div.logout {
+            position: absolute;
+            margin-left: 0px;
+            top: 100px;
+            bottom: 0px;
             border: 0;
+            left: 400px;
         }
         div.a{
             position: static;
@@ -60,7 +65,22 @@
 
         {% endblock %}
 
-        <div class=ppd >{{pagperdis|safe}}</div>
+        {% if auth == True %}
+            <div class="logout">
+                <form action='/logout'>
+                    <input type="submit" value="Logout">
+                </form>
+            </div>	
+        {% else %} 	
+            <div class="login">
+                <form action='/login' method='POST'>
+                    Username <input type="text" name="username" ><br>
+                    Password <input type="password" name="password"><br>
+                    <input type="submit" value="Login">
+                </form>
+            </div>	 
+        {% endif %}
+        <div class=ppd >{{pagperdis|safe}}</div> 
 
     </body>
 
