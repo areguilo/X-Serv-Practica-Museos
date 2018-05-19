@@ -1,17 +1,26 @@
 {% extends "index.html" %}
 {% block content %}
-<h1>MUSEOS</h1>
+<h1>MAIN PAGE: <br></h1>
+<header class="indice">         
+    <a href="/museums"><font color="white">All of Museums</font></a>
+    {% if auth == False %}	
+            <div class="login">
+                <form action='/login' method='POST'>
+                    <h4>Username: <input type="text" name="username" >                   Password: <input type="password" name="password"></h4>
+                    <input type="submit" value="Login">
+                </form>
+            </div>
+    {%else%}
+        <a href="/logout"><font color="white">Logout</font></a>
+    {% endif %}
+    <a href="/about"><font color="white">About</font></a>
+</header>
 
 <div class="museums">
-    <strong>
-        {{response | safe}}
-    </strong>
+    <h1>{{response | safe}}</h1>
 </div>
-<div class=ppd >{{pagperdis|safe}}</div> 
 
-<div class="about">
-    <h2><a href="http://localhost:8000/about">about</a></h2>
-</div>
+<div class=ppd >{{pagperdis|safe}}</div> 
 
 {% if auth == True %}
     <form method={{metodo}} action=""><input type="hidden" name="button" value="change_accessibles"><input type="submit" value="accessibles"></form>

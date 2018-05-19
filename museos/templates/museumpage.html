@@ -1,10 +1,18 @@
 {% extends "index.html" %}
 
 {% block content %}
-    <h1>MUSEUM`S PAGE:</h1>
+ <h1>MUSEUM`S PAGE: <br></h1>
+<header class="indice">         
+    <a href="/">Main Page</a>
+    <a href="/museums">Museums of Madrid</a>
+    {% if auth == True %}
+        <a href="/logout">Logout</a>
+    {%endif%}
+    <a href="/about">About</a>
+</header>
     <div class="museums">
     
-        {{response | safe}}
+        <h4>{{response | safe}}</h4>
     
     </div>
     <a href=http://localhost:8000/> Return to Main Page </a>

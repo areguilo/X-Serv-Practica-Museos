@@ -1,7 +1,14 @@
 {% extends "index.html" %}
 
 {% block content %}
-<h1>ALL MUSEUMS</h1>
+<h1>MUSEUMS OF MADRID: <br></h1>
+<header class="indice">         
+    <a href="/">Main Page</a>
+    {% if auth == True %}
+        <a href="/logout">Logout</a>
+    {%endif%}
+    <a href="/about">About</a>
+</header>
 
 <div class="museums">
 <strong>

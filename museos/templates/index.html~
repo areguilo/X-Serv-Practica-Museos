@@ -6,24 +6,25 @@
 
         <title>Museos</title>
         <style type="text/css">
-        h1, h2, h3, ppd {
-          color: #8A8E27;
+
+        h1, h4, h8{
+          color: #641f1f;
+          font-weight: normal;
+          font-family: "Times New Roman", Times, serif;
+        }
+
+        h2, h3, ppd {
+          color: black;
           font-weight: normal;
           font-family: Arial, Helvetica, sans-serif;
         }
         
-        div {
-          padding-left:  20px;
-          padding-right: 20px;
-          
-          <!-- esto mas adelante sera pasado a la template -->
-        }
         div.ppd {
             position: absolute;
             margin-left: 0px;
-            top: 250px;
+            top: 200px;
             bottom: 0px;
-            left: 450px;
+            left: 800px;
             width: 40%
         }
         div.museums {
@@ -37,20 +38,21 @@
         }
         div.footer {
             text-align: center;
-            position: ;
+            position: fixed;
             left: 0;
+            right: 0;
             bottom: 0;
             width: 100%;
-            background-color: blue;
+            background-color: #641f1f;
             color: white;
         }
-        div.login, div.logout {
+        div.login {
             position: absolute;
             margin-left: 0px;
-            top: 100px;
+            top: 40px;
             bottom: 0px;
             border: 0;
-            left: 400px;
+            left: 800px;
         }
         div.aa{
             position: static;
@@ -67,8 +69,9 @@
         header.indice{
             width: 100%;
             display:inline;
-            background-color: white;
-            position:static;      
+            background-color: #641f1f;
+            position:static;
+            float: right;      
         }
         #banner{
 		    width: 110;
@@ -80,37 +83,23 @@
             width: 500px;
             height: 200px;
         }
+        .cuerpo{
+            background: {{color}};
+            font-size: {{size}}; 
+        }
     </style>
     </head>
     
-    <body bgcolor=#D8B9C8>
- 
-    <img id = "banner" src = "{%static 'museos_icono.png' %}"/>
-
-        <header class="indice">         
-                {%block content a%}
-                {% endblock %}
-                <a href="/museums">All of Museums</a>
-                {% if auth == True %}
-                    <a href="/logout">Logout</a>
-                {%endif%}
-                <a href="/about">About</a>
-        </header>
+    <body bgcolor=#e99292>
+        <div class = "cuerpo">
+            <img id = "banner" src = "{%static 'museos_icono.png' %}"/>
 
      
         {% block content %}
 
         {% endblock %}
 
-        {% if auth == False %}	
-            <div class="login">
-                <form action='/login' method='POST'>
-                    Username <input type="text" name="username" ><br>
-                    Password <input type="password" name="password"><br>
-                    <input type="submit" value="Login">
-                </form>
-            </div>	 
-        {% endif %}
+        
         
 
     </body>
@@ -120,7 +109,9 @@
 <div class="footer">
 
     <p>Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid<br>
-        <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default"><font color="red">Museos de la ciudad de Madrid</font></a>
+        <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default"><font color="white">Museos de la ciudad de Madrid</font></a>
     </p>
 
 </div>
+</div>
+<br><br><br><br><br><br>

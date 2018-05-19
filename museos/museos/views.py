@@ -33,7 +33,7 @@ def printMainPageMuseums(museums_to_print, string):
         adress = Adress(object)
         museum_id = object.id
         string += '<li><a href=' + link +'>' + museum_name + '</a>'
-        string += '<h4> Adress: '+ adress + '</h4>'
+        string += '<h4><strong> Adress: </strong>'+ adress + '</h4>'
         string += '<h8><a href=http://localhost:8000/museums/'+ str(museum_id) +'>more info</a></h8><br><br>'
     string += '</ul></li>'
     return string
@@ -61,10 +61,10 @@ def TitleUserPage (user):
 
 def userPages():
     users = User.objects.all()
-    list='<strong>User`s pages availble: </strong><br><ul>'
+    list='<h4><strong>User`s pages available: </strong></h4><br><ul>'
     for user in users:
         title, default_name = TitleUserPage(user)
-        list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a><br></li>'
+        list += '<li><h8><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a></h8><br></li>'
     list += '</ul>'
     return list
 
@@ -145,6 +145,8 @@ def nextPage(user,response,pagina):
     elif pagina < (paginas/5)-1:
         response += '<br><a href="?'+ str(pagina+1)+'">Next</a>'
         response += '<br><a href="?'+ str(pagina-1)+'">Previous</a>'
+    else:
+        response += '<br><a href="?'+ str(pagina-1)+'">Previous</a>'
     return response
 
 @csrf_exempt
@@ -154,13 +156,11 @@ def personalPage(request, identifier):
         auth = True
     else:
         auth = False
-    user = User.objects.get(id=request.user.id)
-    a=request.GET.urlencode().split('/')[0]
-    print (a)
-    user_preferences = UserMuseum.objects.filter(user=user)
+    user = User.objects.get(id=identifier)
+    user_museums = UserMuseum.objects.filter(user=user)
     title, default_name = TitleUserPage(user)
     ###########################################
-    if default_name == True:
+    if default_name == True and request.user == user:
         NamePageForm = ("""<html><body><form action="" method = "POST"><br>
             Change Personal`s Name Page:<br>
             <input type="text" name='name' value=""><br>
@@ -168,22 +168,48 @@ def personalPage(request, identifier):
         response = NamePageForm
     else:
         response=""
+    if request.user == user:
+        change_parametres = True
+    else:
+        change_parametres = False
     if request.method == "POST":
-        namepage = str(request.POST['name'])
-        try:
-            pref_user = Preference.objects.get(user=user)
-            pref_user.title = namepage
-        except Preference.DoesNotExist:
-            pref_user = Preference(user=user, title=namepage)
-        pref_user.save()
-        return HttpResponseRedirect("/"+ str(user.id))
+        #namepage = str(request.POST['name'])
+        name= request.body.decode('utf-8').split("=")[0]
+        if name == 'name':
+            try:
+                pref_user = Preference.objects.get(user=user)
+                namepage = str(request.POST['name'])
+                pref_user.title = namepage
+            except Preference.DoesNotExist:
+                pref_user = Preference(user=user, title=namepage)
+            pref_user.save()
+            return HttpResponseRedirect("/"+ str(user.id))
+        elif name == 'Size':
+            try:
+                pref_user = Preference.objects.get(user=user)
+                size = str(request.POST['Size'])
+                pref_user.size = size
+            except Preference.DoesNotExist:
+                pref_user = Preference(user=user, size=size)
+            pref_user.save()
+            return HttpResponseRedirect("/"+ str(user.id))
+        elif name == 'Color':
+            try:
+                pref_user = Preference.objects.get(user=user)
+                color = str(request.POST['Color'])
+                pref_user.background = color
+            except Preference.DoesNotExist:
+                pref_user = Preference(user=user, background=color)
+            pref_user.save()
+            return HttpResponseRedirect("/"+ str(user.id))
+
     ###########################################
     pagina = request.GET.urlencode().split('=')[0]
     if pagina == "":
         pagina = 0
     else:
         pagina = int(pagina)
-    preferenciasmostrar = user_preferences[5*pagina:5*(pagina+1)]
+    preferenciasmostrar = user_museums[5*pagina:5*(pagina+1)]
     ###########################################
     response += title + '<ul><h2>'
     for preference in preferenciasmostrar:
@@ -202,7 +228,10 @@ def personalPage(request, identifier):
     response = nextPage(user,response,pagina)
     template = get_template('user_template.html')
     #response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br>"
-    return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
+    if change_parametres == False:
+        return HttpResponse(template.render(Context({'response':response, 'auth':auth, 'change_parametres':change_parametres})))
+    else:
+        return HttpResponse(template.render(Context({'response':response, 'auth':auth, 'change_parametres':change_parametres, 'color':Preference.objects.get(user=user).background, 'size':Preference.objects.get(user=user).size})))
     #######################################
 
 @csrf_exempt

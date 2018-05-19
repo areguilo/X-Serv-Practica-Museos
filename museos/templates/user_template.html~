@@ -1,10 +1,41 @@
 {% extends "index.html" %}
-{%block content a%}
-    <a href="/">Main Page</a>   
 
-{%endblock%}
 {% block content %}
-<h1>MUSEOS</h1>
+
+<h1>USER`S PAGE: <br></h1>
+
+<header class="indice">         
+    <a href="/museums">All of Museums</a>
+    {% if auth == True %}
+        <a href="/logout">Logout</a>
+    {%endif%}
+    <a href="/about">About</a>
+</header>
+
+{% if change_parametres == True %}
+    <form method='POST'>
+        <b>Font size:</b>
+        <select name='Size'>
+            <option value='5px'>5</option>
+            <option value='10px'>10</option>
+            <option value='15px'>15</option>
+            <option value='20px'>20</option>
+            <option value='25px'>25</option>
+        </select>
+        <input type='submit' value='Send'>
+    </form>
+    <form method='POST'>
+        <b>Background color:</b>
+        <select name='Color'>
+            <option value='blue'>Blue</option>
+            <option value='red'>Red</option>
+            <option value='white'>White</option>
+            <option value='pink'>Pink</option>
+            <option value='orange'>Orange</option>
+        </select>
+        <input type='submit' value='Send'>
+    </form>
+{%endif%}
 
 <div class="museums">
 <strong>

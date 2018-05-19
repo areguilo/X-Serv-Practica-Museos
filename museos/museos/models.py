@@ -33,7 +33,7 @@ class Museum(models.Model):
 
 class UserMuseum(models.Model):
     user = models.ForeignKey(User, related_name="user") #nombre de la relacion inversa para volver de User a UserMuseum
-    museums = models.OneToOneField(Museum)
+    museums = models.ForeignKey(Museum)
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -42,7 +42,7 @@ class UserMuseum(models.Model):
 class Preference(models.Model):
     user = models.ForeignKey(User)
     title= models.CharField(max_length=32)
-    size = models.IntegerField(default=9)
+    size = models.CharField(max_length=3, default="9px")
     #color = models.CharField(max_length=16, default="black")
     background= models.CharField(max_length=32, default="green")
 

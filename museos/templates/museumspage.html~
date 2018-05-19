@@ -1,10 +1,7 @@
 {% extends "index.html" %}
-{%block content a%}
-    <a href="/">Main Page</a>   
 
-{%endblock%}
 {% block content %}
-<h1>ALL MUSEUMS</h1>
+<h1>MUSEUMS OF MADRID: <br></h1>
 
 <div class="museums">
 <strong>
