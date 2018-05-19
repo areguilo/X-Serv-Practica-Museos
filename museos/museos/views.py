@@ -17,47 +17,53 @@ def museumsInOrder(museums):
         list[museum.NOMBRE] = museum.comment_set.count()
     #ordenamos el diccionario por su clave: (https://www.lawebdelprogramador.com/foros/Python/1524506-solucionado-ordenar-un-diccionario-por-su-clave-o-valor-en-Python.html)
     in_order = sorted(list.items(),key = operator.itemgetter(1), reverse = True)
-    return in_order
+    in_order_0_5 = in_order[0:5]
+    return in_order, in_order_0_5
 
-def printMainPageMuseums(museums, museums_to_print, string):
-    #print (museums_to_print)
+def Adress (object):
+    adress = object.NOMBRE_VIA + ", " + object.NUM + ", " + object.LOCALIDAD+ ", "+ object.PROVINCIA + ", " + object.CODIGO_POSTAL+ ", " + object.BARRIO + ", "+ object.DISTRITO
+    return adress
+
+def printMainPageMuseums(museums_to_print, string):
+    museums = Museum.objects.all()
     for museum in museums_to_print:
         object = museums.get(NOMBRE=museum[0])
         link = object.CONTENT_URL
         museum_name = object.NOMBRE
+        adress = Adress(object)
         museum_id = object.id
-        adress = object.NOMBRE_VIA + ", " + object.NUM + ", " + object.LOCALIDAD+ ", "+ object.PROVINCIA + ", " + object.CODIGO_POSTAL+ ", " + object.BARRIO + ", "+ object.DISTRITO
         string += '<li><a href=' + link +'>' + museum_name + '</a>'
         string += '<h4> Adress: '+ adress + '</h4>'
-        string += '<h8><a href=http://localhost:8000/museos/'+ str(museum_id) +'>more info</a></h8><br><br>'
+        string += '<h8><a href=http://localhost:8000/museums/'+ str(museum_id) +'>more info</a></h8><br><br>'
     string += '</ul></li>'
     return string
 
-def accessibles (request, museos):
+def accessibles (request, museums):
     if (request.method == 'POST'):
         metodo = "GET"
         aviso = str(request.POST['button'])
         if aviso == "change_accessibles":
-            all_museums = museos.filter(ACCESIBILIDAD=1)
+            all_museums = museums.filter(ACCESIBILIDAD=1)
     else:
         metodo = "POST"
-        all_museums = museos
+        all_museums = museums
     return all_museums, metodo
 
 def TitleUserPage (user):
     try:
         user_preference = Preference.objects.get(user=user)
         title = user_preference.title
+        default_name = False
     except Preference.DoesNotExist:
-        title = 'pagina de ' + user.username
-    return title
+        default_name = True
+        title =  "<strong>" + user.username + "`s Page:</strong>"
+    return title, default_name
 
 def userPages():
     users = User.objects.all()
-    list='Enlaces paginas disponibles: <br><ul>'
-    #print(users)
+    list='<strong>User`s pages availble: </strong><br><ul>'
     for user in users:
-        title = TitleUserPage(user)
+        title, default_name = TitleUserPage(user)
         list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a><br></li>'
     list += '</ul>'
     return list
@@ -71,74 +77,183 @@ def mainPage(request):
         museums = Museum.objects.all()
     [all_museums, metodo] = accessibles(request, museums)
     username = request.user.username
-    museums_in_order = museumsInOrder(all_museums)
+    museums_in_order, museums_in_order_0_5 = museumsInOrder(all_museums)
     template = get_template('mainpage.html')
     if request.user.is_authenticated():
         auth = True
         response = '<h2>Hi ' + username
-        #response += ': <a href=http://localhost:8000/'+ username + '>Página de '+ username + '</a></h2>'
-        #response += '<h2>Click here to <a href=http://localhost:8000/logout>logout</a></h2>'
     else:
         auth = False
         response = ('<h2>Hi unknown client.</h2>')
     response += '<ul>'
-    response = printMainPageMuseums(all_museums, museums_in_order, response)
+    response = printMainPageMuseums(museums_in_order_0_5, response)
     pagperdis = userPages()
     return HttpResponse(template.render(Context({'response':response, 'metodo':metodo, 'auth':auth, 'pagperdis':pagperdis})))
+
+def distrito_filter():
+    museums = Museum.objects.all()
+    distritos=[]
+    for museum in museums:
+        distritos.append(museum.DISTRITO)
+    #http://blog.elcodiguero.com/python/eliminar-objetos-repetidos-de-una-lista.html
+    lista=[]
+    for i in distritos:
+        if i not in lista:
+            lista.append(i)
+    DistritoForm = '''<form action="" Method="POST" id="respuesta">
+                    <input type="submit" value="Enviar">
+                    </form>
+                    <select name="distrito" form="respuesta">
+                    <option value=TODOS>TODOS</option>'''
+    for distrito in lista:
+        DistritoForm += '<option value="' + distrito + '">' + distrito + '</option>'
+    DistritoForm +=  '</select>'
+    print (DistritoForm)
+    return DistritoForm
+
+@csrf_exempt
+def museumsPage(request):
+    if request.user.is_authenticated():
+        auth = True
+    else:
+        auth = False
+    if request.method == 'GET':
+        all_museums = Museum.objects.all()
+    else:
+        distrito = request.POST["distrito"]
+        if distrito != "TODOS":
+            print(distrito)
+            all_museums = Museum.objects.filter(DISTRITO=distrito)
+        else:
+            all_museums = Museum.objects.all()
+    response = "<h2>"
+    museums_in_order, museums_in_order_0_5 = museumsInOrder(all_museums)
+    response = printMainPageMuseums(museums_in_order, response)
+    template = get_template('museumspage.html')
+    response = distrito_filter() + response
+
+    return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
+
+def nextPage(user,response,pagina):
+    selecciones = UserMuseum.objects.filter(user=user)
+    paginas = len(selecciones)
+
+    if pagina == 0 and paginas>5:
+        response += '<br><a href="?'+ str(pagina+1)+'">Next</a>'
+    elif pagina == 0 and paginas <5:
+        pass
+    elif pagina < (paginas/5)-1:
+        response += '<br><a href="?'+ str(pagina+1)+'">Next</a>'
+        response += '<br><a href="?'+ str(pagina-1)+'">Previous</a>'
+    return response
 
 @csrf_exempt
 def personalPage(request, identifier):
     #######################################
-    auth=False
-    template = get_template('user_template.html')
-    user = User.objects.get(id=identifier)
+    if request.user.is_authenticated():
+        auth = True
+    else:
+        auth = False
+    user = User.objects.get(id=request.user.id)
+    a=request.GET.urlencode().split('/')[0]
+    print (a)
     user_preferences = UserMuseum.objects.filter(user=user)
-    title = TitleUserPage(user)
-    response= title + '<ul><h2>'
-    ####################################
-    #if len(user_preferences)>5:
-    #    print ("yesssssssssss")
-    ####################################
-    for preference in user_preferences:
+    title, default_name = TitleUserPage(user)
+    ###########################################
+    if default_name == True:
+        NamePageForm = ("""<html><body><form action="" method = "POST"><br>
+            Change Personal`s Name Page:<br>
+            <input type="text" name='name' value=""><br>
+            <input type="submit"value="send"></form></body></html>""")
+        response = NamePageForm
+    else:
+        response=""
+    if request.method == "POST":
+        namepage = str(request.POST['name'])
+        try:
+            pref_user = Preference.objects.get(user=user)
+            pref_user.title = namepage
+        except Preference.DoesNotExist:
+            pref_user = Preference(user=user, title=namepage)
+        pref_user.save()
+        return HttpResponseRedirect("/"+ str(user.id))
+    ###########################################
+    pagina = request.GET.urlencode().split('=')[0]
+    if pagina == "":
+        pagina = 0
+    else:
+        pagina = int(pagina)
+    preferenciasmostrar = user_preferences[5*pagina:5*(pagina+1)]
+    ###########################################
+    response += title + '<ul><h2>'
+    for preference in preferenciasmostrar:
         fav_museum = Museum.objects.get(NOMBRE=preference.museums)
         museum_name = fav_museum.NOMBRE
-        email = fav_museum.CONTENT_URL
-        adress = "fav_museum.location"
-        date = str(preference.date)
-        response += '<li><a href=' + email + '>' + museum_name + '</a></li>'
-        response += 'adress: '+ adress + '<br>' + 'fecha de like: ' + date + '<br>'
-        response += '<a href=http://localhost:8000/museos/'+ str(fav_museum.id) +'>more info</a><br><br>'
+        url = fav_museum.CONTENT_URL
+        email = fav_museum.EMAIL
+        tlfn = fav_museum.TELEFONO
+        adress = Adress(fav_museum)
+        date = str(preference.date).split(".")[0]
+        response += '<li><a href=' + url + '>' + museum_name + '</a></li>'
+        response += '<strong>-Adress: </strong>'+ adress + '<br>' + '<strong>-Like date: </strong>' + date + '<br>'
+        response += '<strong>-Email: </strong>'+ email + '<br>' + '<strong>-Tlfn: </strong>' + tlfn + '<br>'
+        response += '<a href=http://localhost:8000/museums/'+ str(fav_museum.id) +'>more info</a><br><br>'
     response += '</ul></h2>'
-    return HttpResponse(template.render(Context({'response':response})))
+    response = nextPage(user,response,pagina)
+    template = get_template('user_template.html')
+    #response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br>"
+    return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
     #######################################
 
 @csrf_exempt
 def museumPage(request, identifier):
-    print (type(identifier))
+    if request.user.is_authenticated():
+        auth = True
+    else:
+        auth = False
+    user = request.user
     museum = Museum.objects.all().get(id=identifier)
     description = museum.DESCRIPCION
-    user = request.user
-    response = "<strong>"+museum.NOMBRE+": </strong><br>"
-    response += "Description: " + description
+    email = museum.EMAIL
+    tlfn = museum.TELEFONO
+    fax = museum.FAX
+    horary = museum.HORARIO
+    adress = Adress(museum)
+
+    if museum.ACCESIBILIDAD == "0":
+        accessible = "No"
+    else:
+        accessible = "Yes"
+
+    response = "<strong><h1>"+ museum.NOMBRE + ": </h1><br><br>"
+    response += "Description: </strong><br>" + description + "<br><br>"
+    response += "<strong> Accessible: </strong>" + accessible + "<br><br>"
+    response += "<strong> Adress: </strong>" + adress + "<br><br>"
+    response += "<strong> Horary: </strong>" + horary+ "<br><br>"
+    response += "<strong> EMAIL: </strong>" + email + "<br><br>"
+    response += "<strong> Contact Number: </strong>" + tlfn + "<br><br>"
+    response += "<strong> FAX: </strong>" + fax + "<br><br>"
     if request.method == 'GET':
         #museum = Museum.objects.all().get(id=identifier)
         CommentForm = ("""<html><body><form action="" method = "POST"><br>
             Put a comment:<br>
-            <input type="text" name='comment' value=""><br>
-            <input type="submit"value="send"></form></body></html>""")
+            <input id="comment_box" type="text" name='comment' value="" class="comment_box"><br>
+            <input type="submit"value="Send comment"></form></body></html>""")
 
         LikeButton = ("""<html><body><form method= "POST" action="">
             <input type="hidden" name="button" value="like">
             <input type="submit" value="Add to favourites"></form></body></html>""")
 
-        response += CommentForm + LikeButton
         comments = Comment.objects.filter(museum=museum)
         response += "<strong>Comments: </strong><br><br>"
         if len(comments) == 0:
             response += 'the are no comments to this museum, be the first to comment it!'
         else:
             for comment in comments:
-                response += '<li><strong>Comment:"</strong>' + comment.text + '". <strong>Date: </strong>'+ str(comment.date) + '</li><br>'
+                response += '<li><strong>Comment:"</strong>' + comment.text + '". <strong>Date: </strong>'+ str(comment.date).split(".")[0] + '</li><br>'
+
+        response += CommentForm + LikeButton
+
     elif request.method == 'POST':
         if "comment" in request.POST:
             comment = str(request.POST['comment'])
@@ -149,24 +264,16 @@ def museumPage(request, identifier):
             like = UserMuseum(user=user, museums=museum)
             like.save()
             response = "Your like was saved. "
-        response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br><a href=http://localhost:8000/museos/" + str(museum.id) + "> Return to the Museum`s Page </a></h2>"
+        response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br><a href=http://localhost:8000/museums/" + str(museum.id) + "> Return to the Museum`s Page </a></h2>"
         #title = user_preference.title
-    return HttpResponse(response)
+    template = get_template('museumpage.html')
+    return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
+
 
 def about(response):
-    #template = get_template('about.html')
-    #return HttpResponse(template.render())
-    a=parserXML()
-    return HttpResponse(a)
+    template = get_template('about.html')
+    return HttpResponse(template.render())
 
-def loginPost(request):
-    loginForm = ("""<html><body><form action="/login" method = "POST">
-    Username:<br>
-    <input type="text" name='username' value=""><br>
-    Password:<br>
-    <input type="password" name='password' value=""><br>
-    <input type="submit"value="login"></form></body></html>""")
-    return HttpResponse(loginForm)
 
 @csrf_exempt
 def loginView(request):

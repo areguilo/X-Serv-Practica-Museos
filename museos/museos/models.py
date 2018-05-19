@@ -42,12 +42,12 @@ class UserMuseum(models.Model):
 class Preference(models.Model):
     user = models.ForeignKey(User)
     title= models.CharField(max_length=32)
-    size = models.IntegerField()
-    color = models.CharField(max_length=16)
-    background= models.CharField(max_length=32)
+    size = models.IntegerField(default=9)
+    #color = models.CharField(max_length=16, default="black")
+    background= models.CharField(max_length=32, default="green")
 
     def __str__(self):
-        return self.user.user.username
+        return self.user.username
 
 class Comment(models.Model):
     text = models.TextField()

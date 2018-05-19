@@ -1,5 +1,8 @@
 {% extends "index.html" %}
+{%block content a%}
+    <a href="/">Main Page</a>   
 
+{%endblock%}
 {% block content %}
 <h1>MUSEOS</h1>
 

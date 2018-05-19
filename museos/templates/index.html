@@ -1,4 +1,5 @@
 <!DOCTYPE html">
+{% load staticfiles %}
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
@@ -14,23 +15,29 @@
         div {
           padding-left:  20px;
           padding-right: 20px;
-          border: 1px solid black;
+          
           <!-- esto mas adelante sera pasado a la template -->
-        }
-        .a, .b {
-            width: 70px;
         }
         div.ppd {
             position: absolute;
             margin-left: 0px;
             top: 250px;
             bottom: 0px;
-            border: 1;
             left: 450px;
+            width: 40%
+        }
+        div.museums {
+            
+            margin-left: 0px;
+            top: 0px;
+            bottom: 0px;
+            border: 0;
+            left: 0px;
+            width:40%;
         }
         div.footer {
             text-align: center;
-            position: fixed;
+            position: ;
             left: 0;
             bottom: 0;
             width: 100%;
@@ -45,33 +52,55 @@
             border: 0;
             left: 400px;
         }
-        div.a{
+        div.aa{
             position: static;
             background-color: pink;
         }
 
-        div.b{
+        div.about{
             position: static;
             background-color: green;
+            border: 1px solid black;
+            width: 60px;
         }
-
+        
+        header.indice{
+            width: 100%;
+            display:inline;
+            background-color: white;
+            position:static;      
+        }
+        #banner{
+		    width: 110;
+		    padding-right: 35px;
+		    padding-left: 15px;
+            float: left;
+        }
+        #comment_box{
+            width: 500px;
+            height: 200px;
+        }
     </style>
     </head>
+    
     <body bgcolor=#D8B9C8>
+ 
+    <img id = "banner" src = "{%static 'museos_icono.png' %}"/>
 
+        <header class="indice">         
+                <a href="/museums">All of Museums</a>
+                {% if auth == True %}
+                    <a href="/logout">Logout</a>
+                {%endif%}
+                <a href="/about">About</a>
+        </header>
 
-
+     
         {% block content %}
 
         {% endblock %}
 
-        {% if auth == True %}
-            <div class="logout">
-                <form action='/logout'>
-                    <input type="submit" value="Logout">
-                </form>
-            </div>	
-        {% else %} 	
+        {% if auth == False %}	
             <div class="login">
                 <form action='/login' method='POST'>
                     Username <input type="text" name="username" ><br>
@@ -80,7 +109,7 @@
                 </form>
             </div>	 
         {% endif %}
-        <div class=ppd >{{pagperdis|safe}}</div> 
+        
 
     </body>
 

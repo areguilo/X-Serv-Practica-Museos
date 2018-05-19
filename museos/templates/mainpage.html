@@ -2,22 +2,15 @@
 {% block content %}
 <h1>MUSEOS</h1>
 
-<strong>
-    {{response | safe}}
-</strong>
-
-<div class="b">
-    <h2><a href="http://localhost:8000/about">about</a></h2>
+<div class="museums">
+    <strong>
+        {{response | safe}}
+    </strong>
 </div>
+<div class=ppd >{{pagperdis|safe}}</div> 
 
 {% if auth == True %}
     <form method={{metodo}} action=""><input type="hidden" name="button" value="change_accessibles"><input type="submit" value="accessibles"></form>
 {% endif %}
-
-<div class="a" input type="submit" value="Enviar información">
-    <h2><a href="">next 5</a></h2>
-</div>
-<br>
-
 
 {% endblock %}

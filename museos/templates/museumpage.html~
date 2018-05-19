@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1>MUSEUM`S PAGE:</h1>
+    <div class="museums">
+    <strong>
+        {{response | safe}}
+    </strong>
+    </div>
+    <a href=http://localhost:8000/> Return to Main Page </a>
+{% endblock %}
