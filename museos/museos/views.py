@@ -32,9 +32,9 @@ def printMainPageMuseums(museums_to_print, string):
         museum_name = object.NOMBRE
         adress = Adress(object)
         museum_id = object.id
-        string += '<li><a href=' + link +'>' + museum_name + '</a>'
+        string += '<li><strong><a href=' + link +'><font color="3d1313">' + museum_name + '</font><strong></a>'
         string += '<h4><strong> Adress: </strong>'+ adress + '</h4>'
-        string += '<h8><a href=http://localhost:8000/museums/'+ str(museum_id) +'>more info</a></h8><br><br>'
+        string += '<h8><a href=http://localhost:8000/museums/'+ str(museum_id) +'><font color="white">more info</font></a></h8><br><br>'
     string += '</ul></li>'
     return string
 
@@ -61,10 +61,10 @@ def TitleUserPage (user):
 
 def userPages():
     users = User.objects.all()
-    list='<h4><strong>User`s pages available: </strong></h4><br><ul>'
+    list='<strong>User`s pages available: </strong><br><ul>'
     for user in users:
         title, default_name = TitleUserPage(user)
-        list += '<li><h8><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'>' + title + '</a></h8><br></li>'
+        list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'><font color="white">' + title + '</font></a><br></li>'
     list += '</ul>'
     return list
 
@@ -81,10 +81,10 @@ def mainPage(request):
     template = get_template('mainpage.html')
     if request.user.is_authenticated():
         auth = True
-        response = '<h2>Hi ' + username
+        response = '<h2>Hi ' + username + '.</h2>'
     else:
         auth = False
-        response = ('<h2>Hi unknown client.</h2>')
+        response = '<h2>Hi unknown client.</h2>'
     response += '<ul>'
     response = printMainPageMuseums(museums_in_order_0_5, response)
     pagperdis = userPages()
@@ -101,13 +101,12 @@ def distrito_filter():
         if i not in lista:
             lista.append(i)
     DistritoForm = '''<form action="" Method="POST" id="respuesta">
-                    <input type="submit" value="Enviar">
-                    </form>
-                    <select name="distrito" form="respuesta">
-                    <option value=TODOS>TODOS</option>'''
+        <select name="distrito" form="respuesta">
+        <option value=TODOS>TODOS</option>
+        '''
     for distrito in lista:
         DistritoForm += '<option value="' + distrito + '">' + distrito + '</option>'
-    DistritoForm +=  '</select>'
+    DistritoForm +=  '</select><input type="submit" value="Enviar"></form>'
     print (DistritoForm)
     return DistritoForm
 
@@ -126,7 +125,7 @@ def museumsPage(request):
             all_museums = Museum.objects.filter(DISTRITO=distrito)
         else:
             all_museums = Museum.objects.all()
-    response = "<h2>"
+    response = ""
     museums_in_order, museums_in_order_0_5 = museumsInOrder(all_museums)
     response = printMainPageMuseums(museums_in_order, response)
     template = get_template('museumspage.html')
@@ -139,14 +138,14 @@ def nextPage(user,response,pagina):
     paginas = len(selecciones)
 
     if pagina == 0 and paginas>5:
-        response += '<br><a href="?'+ str(pagina+1)+'">Next</a>'
+        response += '<br><a href="?'+ str(pagina+1)+'"><font color="white">Next</font></a>'
     elif pagina == 0 and paginas <5:
         pass
     elif pagina < (paginas/5)-1:
-        response += '<br><a href="?'+ str(pagina+1)+'">Next</a>'
-        response += '<br><a href="?'+ str(pagina-1)+'">Previous</a>'
+        response += '<br><a href="?'+ str(pagina+1)+'"><font color="white">Next</font></a>'
+        response += '<br><a href="?'+ str(pagina-1)+'"><font color="white">Previous</font></a>'
     else:
-        response += '<br><a href="?'+ str(pagina-1)+'">Previous</a>'
+        response += '<br><a href="?'+ str(pagina-1)+'"><font color="white">Previous</font></a>'
     return response
 
 @csrf_exempt
@@ -211,20 +210,20 @@ def personalPage(request, identifier):
         pagina = int(pagina)
     preferenciasmostrar = user_museums[5*pagina:5*(pagina+1)]
     ###########################################
-    response += title + '<ul><h2>'
+    response += 'Title`s Page: <strong>' + title + '</strong><ul>'
     for preference in preferenciasmostrar:
-        fav_museum = Museum.objects.get(NOMBRE=preference.museums)
+        fav_museum = Museum.objects.get(NOMBRE=preference.museum)
         museum_name = fav_museum.NOMBRE
         url = fav_museum.CONTENT_URL
         email = fav_museum.EMAIL
         tlfn = fav_museum.TELEFONO
         adress = Adress(fav_museum)
         date = str(preference.date).split(".")[0]
-        response += '<li><a href=' + url + '>' + museum_name + '</a></li>'
+        response += '<li><strong><a href=' + url + '><font color="#3d1313">' + museum_name + '</font></strong></a></li>'
         response += '<strong>-Adress: </strong>'+ adress + '<br>' + '<strong>-Like date: </strong>' + date + '<br>'
         response += '<strong>-Email: </strong>'+ email + '<br>' + '<strong>-Tlfn: </strong>' + tlfn + '<br>'
-        response += '<a href=http://localhost:8000/museums/'+ str(fav_museum.id) +'>more info</a><br><br>'
-    response += '</ul></h2>'
+        response += '<a href=http://localhost:8000/museums/'+ str(fav_museum.id) +'><font color="white">More info</font></a><br><br>'
+    response += '</ul>'
     response = nextPage(user,response,pagina)
     template = get_template('user_template.html')
     #response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br>"
@@ -290,14 +289,19 @@ def museumPage(request, identifier):
             comment.save()
             response = "Your comment was correctly added. "
         else:
-            like = UserMuseum(user=user, museums=museum)
+            like = UserMuseum(user=user, museum=museum)
             like.save()
             response = "Your like was saved. "
-        response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br><a href=http://localhost:8000/museums/" + str(museum.id) + "> Return to the Museum`s Page </a></h2>"
+        response += "<br><a href=http://localhost:8000/museums/" + str(museum.id) + "><font color='#3d1313'> Return to the Museum`s Page </font></a></h2>"
         #title = user_preference.title
     template = get_template('museumpage.html')
     return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
 
+def xmlPage(request, identifier):
+    template = get_template('usuario.xml')
+    user = User.objects.get(id=identifier)
+    user_museums = UserMuseum.objects.filter(user=user)
+    return HttpResponse(template.render(Context({'usuario':user, 'museos_seleccionados':user_museums})), content_type="text/xml")
 
 def about(response):
     template = get_template('about.html')

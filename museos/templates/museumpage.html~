@@ -3,17 +3,17 @@
 {% block content %}
  <h1>MUSEUM`S PAGE: <br></h1>
 <header class="indice">         
-    <a href="/">Main Page</a>
-    <a href="/museums">Museums of Madrid</a>
+    <a href="/"><font color="white">|Main Page|</font></a>
+    <a href="/museums"><font color="white">|Museums of Madrid|</font></a>
     {% if auth == True %}
-        <a href="/logout">Logout</a>
+        <a href="/logout"><font color="white">|Logout|</font></a>
     {%endif%}
-    <a href="/about">About</a>
+    <a href="/about"><font color="white">|About|</font></a>
 </header>
     <div class="museums">
     
-        {{response | safe}}
+        <h4>{{response | safe}}</h4>
     
     </div>
-    <a href=http://localhost:8000/> Return to Main Page </a>
+    
 {% endblock %}

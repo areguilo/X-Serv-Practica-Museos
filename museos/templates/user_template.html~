@@ -4,17 +4,18 @@
 
 <h1>USER`S PAGE: <br></h1>
 
-<header class="indice">         
-    <a href="/museums">All of Museums</a>
+<header class="indice">    
+    <a href="/"><font color="white">Main Page</font></a>     
+    <a href="/museums"><font color="white">Museums of Madrid</font></a>
     {% if auth == True %}
-        <a href="/logout">Logout</a>
+        <a href="/logout"><font color="white">Logout</font></a>
     {%endif%}
-    <a href="/about">About</a>
+    <a href="/about"><font color="white">About</font></a>
 </header>
 
 {% if change_parametres == True %}
     <form method='POST'>
-        <b>Font size:</b>
+        <b><font color="white">Font size:</font></b>
         <select name='Size'>
             <option value='5px'>5</option>
             <option value='10px'>10</option>
@@ -25,13 +26,14 @@
         <input type='submit' value='Send'>
     </form>
     <form method='POST'>
-        <b>Background color:</b>
+        <b><font color="white">Background color:</font></b>
         <select name='Color'>
             <option value='blue'>Blue</option>
             <option value='red'>Red</option>
             <option value='white'>White</option>
             <option value='pink'>Pink</option>
             <option value='orange'>Orange</option>
+            <option value='#641f1f'>Default</option>
         </select>
         <input type='submit' value='Send'>
     </form>
@@ -39,8 +41,8 @@
 
 <div class="museums">
 <strong>
-    {{response | safe}}
+    <h4>{{response | safe}}</h4>
 </strong>
 </div>
-<a href=http://localhost:8000/> Return to Main Page </a>
+
 {% endblock %}

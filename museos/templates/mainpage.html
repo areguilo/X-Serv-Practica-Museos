@@ -2,7 +2,7 @@
 {% block content %}
 <h1>MAIN PAGE: <br></h1>
 <header class="indice">         
-    <a href="/museums"><font color="white">All of Museums</font></a>
+    <a href="/museums"><font color="white">Museums of Madrid</font></a>
     {% if auth == False %}	
             <div class="login">
                 <form action='/login' method='POST'>
@@ -15,9 +15,9 @@
     {% endif %}
     <a href="/about"><font color="white">About</font></a>
 </header>
-
+<br>
 <div class="museums">
-    <h1>{{response | safe}}</h1>
+    <h4>{{response | safe}}</h4>
 </div>
 
 <div class=ppd >{{pagperdis|safe}}</div> 
