@@ -12,6 +12,7 @@ from django.utils.translation import ugettext
 import operator
 # Create your views here.
 
+
 def museumsInOrder(museums):
     list = {}
     for museum in museums:
@@ -56,9 +57,9 @@ def TitleUserPage (user):
         title = user_preference.title
     except Preference.DoesNotExist:
         default_name = True
-        pref_user = Preference(user=user, title=user.username + "`s Page`")
+        pref_user = Preference(user=user, title=user.username + "`s Page")
         pref_user.save()
-        title =  "<strong>" + pref_user.title + "`s Page:</strong>"
+        title =  "<strong>" + pref_user.title + ": </strong>"
     return title
 
 def userPages():
@@ -123,7 +124,6 @@ def museumsPage(request):
     else:
         distrito = request.POST["distrito"]
         if distrito != "TODOS":
-            print(distrito)
             all_museums = Museum.objects.filter(DISTRITO=distrito)
         else:
             all_museums = Museum.objects.all()
@@ -141,7 +141,7 @@ def nextPage(user,response,pagina):
 
     if pagina == 0 and paginas>5:
         response += '<br><a href="?'+ str(pagina+1)+'"><font color="white">Next</font></a>'
-    elif pagina == 0 and paginas <5:
+    elif pagina == 0 and paginas <= 5:
         pass
     elif pagina < (paginas/5)-1:
         response += '<br><a href="?'+ str(pagina+1)+'"><font color="white">Next</font></a>'
@@ -157,6 +157,8 @@ def personalPage(request, identifier):
         auth = True
     else:
         auth = False
+    print("identifier: ")
+    print(identifier)
     user = User.objects.get(id=identifier)
     user_museums = UserMuseum.objects.filter(user=user)
     title = TitleUserPage(user)
@@ -171,6 +173,7 @@ def personalPage(request, identifier):
     else:
         response=""
         change_parametres = False
+    print(change_parametres)
     if request.method == "POST":
         #namepage = str(request.POST['name'])
         name= request.body.decode('utf-8').split("=")[0]
@@ -253,7 +256,7 @@ def museumPage(request, identifier):
     else:
         accessible = "Yes"
 
-    response = "<strong><h1>"+ museum.NOMBRE + ": </h1><br><br>"
+    response = "<br><br><br><strong><h1>"+ museum.NOMBRE + ": </h1><br><br>"
     response += "Description: </strong><br>" + description + "<br><br>"
     response += "<strong> Accessible: </strong>" + accessible + "<br><br>"
     response += "<strong> Adress: </strong>" + adress + "<br><br>"
@@ -275,19 +278,21 @@ def museumPage(request, identifier):
         comments = Comment.objects.filter(museum=museum)
         response += "<strong>Comments: </strong><br><br>"
         if len(comments) == 0:
-            response += 'the are no comments to this museum, be the first to comment it!'
+            response += 'there are no comments to this museum, be the first to comment it!'
         else:
             for comment in comments:
                 response += '<li><strong>Comment:"</strong>' + comment.text + '". <strong>Date: </strong>'+ str(comment.date).split(".")[0] + '</li><br>'
-
-        response += CommentForm + LikeButton
+        if auth == True:
+            response += CommentForm + LikeButton
+        else:
+            pass
 
     elif request.method == 'POST':
         if "comment" in request.POST:
             comment = str(request.POST['comment'])
             comment = Comment(text=comment, user=user, museum=museum)
             comment.save()
-            response = "Your comment was correctly added. "
+            response = "<br><br><br>Your comment was correctly added. "
         else:
             like = UserMuseum(user=user, museum=museum)
             like.save()
@@ -295,7 +300,7 @@ def museumPage(request, identifier):
         response += "<br><a href=http://localhost:8000/museums/" + str(museum.id) + "><font color='#3d1313'> Return to the Museum`s Page </font></a></h2>"
         #title = user_preference.title
     template = get_template('museumpage.html')
-    return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
+    return HttpResponse(template.render(Context({'response':response, 'auth':auth, 'museum':museum})))
 
 def xmlUserPage(request, identifier):
     print(identifier)
@@ -332,29 +337,36 @@ def jsonMainPage(request):
     template = get_template('mainpage.json')
     return HttpResponse(template.render(Context({'museums':museums_list})),content_type="text/json")
 
+def RSSchan (request):
+    comments = Comment.objects.all()
+    template = get_template('rss.xml')
+    return HttpResponse(template.render(Context({'comments':comments})),content_type="application/xml")
+
+
 def about(response):
     template = get_template('about.html')
     return HttpResponse(template.render())
 
-# Función que manda la información de la página principal en formato JSON
 @csrf_exempt
-
-
-
-@csrf_exempt
-def loginView(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
+def LoginView(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
             login(request, user)
-            return HttpResponseRedirect('http://localhost:8000/')
+            return HttpResponseRedirect(user.id)
         else:
-            response = 'Error: disables account <br><br><a href=http://localhost:8000/> Return to Main menu </a>'
-    else:
-        response = 'Error: invalid login <br><br><a href=http://localhost:8000/> Return to Main menu </a>'
-    return HttpResponse(response)
+            try:
+                user = User.objects.get(username=username)
+                return HttpResponseRedirect("/")
+            except:
+                #Si no existe crea el usuario y lo loguea
+                user_authenticate = User.objects.create_user(username=username, password=password)
+                user_authenticate.save()
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                return HttpResponseRedirect(user.id)
 
 def logoutView(request):
     logout(request)

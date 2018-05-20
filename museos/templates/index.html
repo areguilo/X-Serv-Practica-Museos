@@ -1,6 +1,7 @@
 <!DOCTYPE html">
 {% load staticfiles %}
 {% load i18n %}
+<link rel="stylesheet" href="{% static 'style.css'%}" />
 
 <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
     <input name="next" type="hidden" value="{{ redirect_to }}" />
@@ -20,120 +21,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-
-        <title>Museos</title>
-        <style type="text/css">
-
-        h1, h4, h8{
-          color: #641f1f;
-          font-weight: normal;
-          font-family: "Times New Roman", Times, serif;
-        }
-
-        h2, h3 {
-          color: black;
-          font-weight: normal;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-        
-        div.ppd {
-            position: absolute;
-            top: 200px;
-            left: 800px;
-            width:30%;
-            border: 10px solid #641f1f;
-            background: #641f1f;
-            color: white;
-            border-style: Groove;
-            font-family: "Times New Roman", Times, serif;
-        }
-        div.museums {
-            
-            margin-left: 0px;
-            top: 0px;
-            bottom: 0px;
-            border: 0;
-            left: 0px;
-            width:40%;
-        }
-        div.footer {
-            text-align: center;
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            color: white;
-            background-color: #641f1f;
-            font-family: "Times New Roman", Times, serif;
-        }
-        div.login {
-            position: absolute;
-            margin-left: 0px;
-            top: 0px;
-            bottom: 0px;
-            border: 0;
-            left: 800px;
-        }
-        div.aa{
-            position: static;
-            background-color: pink;
-        }
-
-        div.about{
-            position: static;
-            background-color: green;
-            border: 1px solid black;
-            width: 60px;
-        }
-        
-        header.indice{
-            width: 100%;
-            display:inline;
-            background-color: #641f1f;
-            position:static;
-            float: right;      
-        }
-        #banner{
-		    width: 110;
-		    padding-right: 35px;
-		    padding-left: 15px;
-            float: left;
-        }
-        #comment_box{
-            width: 500px;
-            height: 200px;
-        }
-        .cuerpo{
-            background: {{color}};
-            font-size: {{size}}; 
-        }
-    </style>
+            <title>Museos</title>
+                <style type="text/css"></style>
     </head>
-    
     <body bgcolor=#e99292>
         <div class = "cuerpo">
             <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/png"/>
             <img id = "banner" src = "{%static 'museos_icono.png' %}"/>
 
-     
         {% block content %}
 
         {% endblock %}
 
-        
-        
-
     </body>
-
 </html>
 
 <div class="footer">
-
     <p>Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid<br>
         <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default"><font color="white">Museos de la ciudad de Madrid</font></a>
     </p>
-
 </div>
 </div>
 <br><br><br><br><br><br>

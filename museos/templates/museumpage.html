@@ -15,5 +15,21 @@
         <h4>{{response | safe}}</h4>
     
     </div>
+<div id="map" class="map" style="width:400px;height:400px;background:yellow"></div>
+<script>
+function myMap() {
+    var aux = "{{museum.LATITUD}}".replace(",",".")
+    var latitude = parseFloat(aux)
+    aux = "{{museum.LONGITUD}}".replace(",",".")
+    var longitude = parseFloat(aux)
+    var mapOptions = {
+        center: new google.maps.LatLng(latitude, longitude),
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+    }
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO8XL1J4L-A1itAPiVntAmd5osP0apZFI&callback=myMap"></script>
     
 {% endblock %}

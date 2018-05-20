@@ -10,7 +10,7 @@
     {% if auth == True %}
         <a href="/logout"><font color="white">Logout</font></a>
     {%endif%}
-    <a href="/user_id/xml"><font color="white">UserPage.xml</font></a>
+    <a href="/{{user_id}}/xml"><font color="white">UserPage.xml</font></a>
     <a href="/about"><font color="white">About</font></a>
 </header>
 

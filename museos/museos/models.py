@@ -42,8 +42,7 @@ class UserMuseum(models.Model):
 class Preference(models.Model):
     user = models.ForeignKey(User)
     title= models.CharField(max_length=32)
-    size = models.CharField(max_length=3, default="9px")
-    #color = models.CharField(max_length=16, default="black")
+    size = models.CharField(max_length=3, default="12px")
     background= models.CharField(max_length=32, default="#e99292")
 
     def __str__(self):
