@@ -7,37 +7,37 @@
             <contenido>
                 <tipo>EntidadesYOrganismos</tipo>
                 <atributos idioma="es">
-                    <atributo nombre="ID-ENTIDAD">{{museo_selec.museo.id_entidad}}</atributo>
-                    <atributo nombre="NOMBRE">{{museo_selec.museo.nombre}}</atributo>
-                    <atributo nombre="DESCRIPCION-ENTIDAD">{{museo_selec.museo.descripcion_entidad}}</atributo>
-                    <atributo nombre="HORARIO">{{museo_selec.museo.horario}}</atributo>
-                    <atributo nombre="EQUIPAMIENTO">{{museo_selec.museo.equipamiento}}</atributo>
-                    <atributo nombre="TRANSPORTE">{{museo_selec.museo.transporte}}</atributo>
-                    <atributo nombre="DESCRIPCION">{{museo_selec.museo.descripcion}}</atributo>
-                    <atributo nombre="ACCESIBILIDAD">{{museo_selec.museo.accesibilidad}}</atributo>
-                    <atributo nombre="CONTENT-URL">{{museo_selec.museo.content_url}}</atributo>
-                    <atributo nombre="TRANSPORTE">{{museo_selec.museo.transporte}}</atributo>
+                    <atributo nombre="ID-ENTIDAD">{{museo_selec.museum.ID_ENTIDAD}}</atributo>
+                    <atributo nombre="NOMBRE">{{museo_selec.NOMBRE}}</atributo>
+                    <atributo nombre="DESCRIPCION-ENTIDAD">{{museo_selec.museum.descripcion_entidad}}</atributo>
+                    <atributo nombre="HORARIO">{{museo_selec.museum.HORARIO}}</atributo>
+                    <atributo nombre="EQUIPAMIENTO">{{museo_selec.museum.EQUIPAMIENTO}}</atributo>
+                    <atributo nombre="TRANSPORTE">{{museo_selec.museum.TRANSPORTE}}</atributo>
+                    <atributo nombre="DESCRIPCION">{{museo_selec.museum.DESCRIPCION}}</atributo>
+                    <atributo nombre="ACCESIBILIDAD">{{museo_selec.museum.ACCESIBILIDAD}}</atributo>
+                    <atributo nombre="CONTENT-URL">{{museo_selec.museum.CONTENT_URL}}</atributo>
+                    <atributo nombre="TRANSPORTE">{{museo_selec.museum.TRANSPORTE}}</atributo>
                     <atributo nombre="LOCALIZACION">
-                        <atributo nombre="NOMBRE-VIA">{{museo_selec.museo.nombre_via}}</atributo>
-                        <atributo nombre="CLASE-VIAL">{{museo_selec.museo.clase_vial}}</atributo>
-                        <atributo nombre="TIPO-NUM">{{museo_selec.museo.tipo_num}}</atributo>
-                        <atributo nombre="NUM">{{museo_selec.museo.num}}</atributo>
-                        <atributo nombre="PLANTA">{{museo_selec.museo.planta}}</atributo>
-                        <atributo nombre="ORIENTACION">{{museo_selec.museo.orientacion}}</atributo>
-                        <atributo nombre="LOCALIDAD">{{museo_selec.museo.localidad}}</atributo>
-                        <atributo nombre="PROVINCIA">{{museo_selec.museo.provincia}}</atributo>
-                        <atributo nombre="CODIGO-POSTAL">{{museo_selec.museo.codigo_postal}}</atributo>
-                        <atributo nombre="BARRIO">{{museo_selec.museo.barrio}}</atributo>
-                        <atributo nombre="DISTRITO">{{museo_selec.museo.distrito}}</atributo>
-                        <atributo nombre="COORDENADA-X">{{museo_selec.museo.coordenada_x}}</atributo>
-                        <atributo nombre="COORDENADA-Y">{{museo_selec.museo.coordenada_y}}</atributo>
-                        <atributo nombre="LATITUD">{{museo_selec.museo.latitud}}</atributo>
-                        <atributo nombre="LONGITUD">{{museo_selec.museo.longitud}}</atributo>
+                        <atributo nombre="NOMBRE-VIA">{{museo_selec.museum.NOMBRE_VIA}}</atributo>
+                        <atributo nombre="CLASE-VIAL">{{museo_selec.museum.CLASE_VIAL}}</atributo>
+                        <atributo nombre="TIPO-NUM">{{museo_selec.museum.TIPO_NUM}}</atributo>
+                        <atributo nombre="NUM">{{museo_selec.museum.NUM}}</atributo>
+                        <atributo nombre="PLANTA">{{museo_selec.museum.PLANTA}}</atributo>
+                        <atributo nombre="ORIENTACION">{{museo_selec.museum.ORIENTACION}}</atributo>
+                        <atributo nombre="LOCALIDAD">{{museo_selec.museum.LOCALIDAD}}</atributo>
+                        <atributo nombre="PROVINCIA">{{museo_selec.museum.PROVINCIA}}</atributo>
+                        <atributo nombre="CODIGO-POSTAL">{{museo_selec.museum.CODIGO_POSTAL}}</atributo>
+                        <atributo nombre="BARRIO">{{museo_selec.museum.BARRIO}}</atributo>
+                        <atributo nombre="DISTRITO">{{museo_selec.museum.DISTRITO}}</atributo>
+                        <atributo nombre="COORDENADA-X">{{museo_selec.museum.X}}</atributo>
+                        <atributo nombre="COORDENADA-Y">{{museo_selec.museum.Y}}</atributo>
+                        <atributo nombre="LATITUD">{{museo_selec.museum.LATITUD}}</atributo>
+                        <atributo nombre="LONGITUD">{{museo_selec.museum.LONGITUD}}</atributo>
                     </atributo>
                     <atributo nombre="DATOSCONTACTOS">
-                        <atributo nombre="TELEFONO">{{museo_selec.museo.telefono}}</atributo>
-                        <atributo nombre="FAX">{{museo_selec.museo.fax}}</atributo>
-                        <atributo nombre="EMAIL">{{museo_selec.museo.email}}</atributo>
+                        <atributo nombre="TELEFONO">{{museo_selec.museum.TELEFONO}}</atributo>
+                        <atributo nombre="FAX">{{museo_selec.museum.FAX}}</atributo>
+                        <atributo nombre="EMAIL">{{museo_selec.museum.EMAIL}}</atributo>
                     </atributo>
                 </atributos>
             </contenido>

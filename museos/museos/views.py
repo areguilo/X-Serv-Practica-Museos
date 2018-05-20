@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.template.loader import get_template
 from django.template import Context
+from django.utils.translation import ugettext
 
 import operator
 # Create your views here.
@@ -53,17 +54,18 @@ def TitleUserPage (user):
     try:
         user_preference = Preference.objects.get(user=user)
         title = user_preference.title
-        default_name = False
     except Preference.DoesNotExist:
         default_name = True
-        title =  "<strong>" + user.username + "`s Page:</strong>"
-    return title, default_name
+        pref_user = Preference(user=user, title=user.username + "`s Page`")
+        pref_user.save()
+        title =  "<strong>" + pref_user.title + "`s Page:</strong>"
+    return title
 
 def userPages():
     users = User.objects.all()
     list='<strong>User`s pages available: </strong><br><ul>'
     for user in users:
-        title, default_name = TitleUserPage(user)
+        title= TitleUserPage(user)
         list += '<li><strong>' + user.username + '</strong>: <a href=http://localhost:8000/'+ str(user.id) +'><font color="white">' + title + '</font></a><br></li>'
     list += '</ul>'
     return list
@@ -81,10 +83,10 @@ def mainPage(request):
     template = get_template('mainpage.html')
     if request.user.is_authenticated():
         auth = True
-        response = '<h2>Hi ' + username + '.</h2>'
+        response = '<h1>Hi ' + username + '.</h1>'
     else:
         auth = False
-        response = '<h2>Hi unknown client.</h2>'
+        response = '<h1>Hi unknown client.</h1>'
     response += '<ul>'
     response = printMainPageMuseums(museums_in_order_0_5, response)
     pagperdis = userPages()
@@ -157,19 +159,17 @@ def personalPage(request, identifier):
         auth = False
     user = User.objects.get(id=identifier)
     user_museums = UserMuseum.objects.filter(user=user)
-    title, default_name = TitleUserPage(user)
+    title = TitleUserPage(user)
     ###########################################
-    if default_name == True and request.user == user:
+    if request.user == user:
         NamePageForm = ("""<html><body><form action="" method = "POST"><br>
             Change Personal`s Name Page:<br>
             <input type="text" name='name' value=""><br>
             <input type="submit"value="send"></form></body></html>""")
         response = NamePageForm
-    else:
-        response=""
-    if request.user == user:
         change_parametres = True
     else:
+        response=""
         change_parametres = False
     if request.method == "POST":
         #namepage = str(request.POST['name'])
@@ -228,9 +228,9 @@ def personalPage(request, identifier):
     template = get_template('user_template.html')
     #response += "<br><a href=http://localhost:8000/> Return to Main Page </a><br>"
     if change_parametres == False:
-        return HttpResponse(template.render(Context({'response':response, 'auth':auth, 'change_parametres':change_parametres})))
+        return HttpResponse(template.render(Context({'response':response, 'user_id':identifier, 'auth':auth, 'change_parametres':change_parametres})))
     else:
-        return HttpResponse(template.render(Context({'response':response, 'auth':auth, 'change_parametres':change_parametres, 'color':Preference.objects.get(user=user).background, 'size':Preference.objects.get(user=user).size})))
+        return HttpResponse(template.render(Context({'response':response, 'user_id':identifier, 'auth':auth, 'change_parametres':change_parametres, 'color':Preference.objects.get(user=user).background, 'size':Preference.objects.get(user=user).size})))
     #######################################
 
 @csrf_exempt
@@ -297,15 +297,48 @@ def museumPage(request, identifier):
     template = get_template('museumpage.html')
     return HttpResponse(template.render(Context({'response':response, 'auth':auth})))
 
-def xmlPage(request, identifier):
-    template = get_template('usuario.xml')
+def xmlUserPage(request, identifier):
+    print(identifier)
+    template = get_template('userpage.xml')
     user = User.objects.get(id=identifier)
     user_museums = UserMuseum.objects.filter(user=user)
-    return HttpResponse(template.render(Context({'usuario':user, 'museos_seleccionados':user_museums})), content_type="text/xml")
+    return HttpResponse(template.render(Context({'user':user, 'user_museums':user_museums})), content_type="text/xml")
+
+def jsonUserPage(request, identifier):
+    user = User.objects.get(id=identifier)
+    user_museums = UserMuseum.objects.filter(user=user)
+    template = get_template('userpage.json')
+    return HttpResponse(template.render(Context({'user':user, 'user_museums':user_museums})),content_type="text/json")
+
+def xmlMainPage(request):
+    museums = Museum.objects.all()
+    [all_museums, metodo] = accessibles(request, museums)
+    username = request.user.username
+    museums_in_order, museums_in_order_0_5 = museumsInOrder(all_museums)
+    museums_list=[]
+    for museum in museums_in_order_0_5:
+        museums_list.append(museums.get(NOMBRE=museum[0]))
+    template = get_template('mainpage.xml')
+    return HttpResponse(template.render(Context({'museums':museums_list})), content_type="text/xml")
+
+def jsonMainPage(request):
+    museums = Museum.objects.all()
+    [all_museums, metodo] = accessibles(request, museums)
+    username = request.user.username
+    museums_in_order, museums_in_order_0_5 = museumsInOrder(all_museums)
+    museums_list=[]
+    for museum in museums_in_order_0_5:
+        museums_list.append(museums.get(NOMBRE=museum[0]))
+    template = get_template('mainpage.json')
+    return HttpResponse(template.render(Context({'museums':museums_list})),content_type="text/json")
 
 def about(response):
     template = get_template('about.html')
     return HttpResponse(template.render())
+
+# Función que manda la información de la página principal en formato JSON
+@csrf_exempt
+
 
 
 @csrf_exempt

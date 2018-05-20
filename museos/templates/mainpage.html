@@ -13,6 +13,7 @@
     {%else%}
         <a href="/logout"><font color="white">Logout</font></a>
     {% endif %}
+    <a href="/xml"><font color="white">MainPage.xml</font></a>
     <a href="/about"><font color="white">About</font></a>
 </header>
 <br>
@@ -22,8 +23,8 @@
 
 <div class=ppd >{{pagperdis|safe}}</div> 
 
-{% if auth == True %}
+
     <form method={{metodo}} action=""><input type="hidden" name="button" value="change_accessibles"><input type="submit" value="accessibles"></form>
-{% endif %}
+
 
 {% endblock %}

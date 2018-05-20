@@ -1,0 +1,20 @@
+{
+    "museums": {
+        {% for museum in museums%}
+        {
+            "ID_ENTIDAD": "{{museum.ID_ENTIDAD}}"
+            "NOMBRE": "{{museum.NOMBRE}}"
+            "DESCRIPCION-ENTIDAD": "{{museum.DESCRIPCION_ENTIDAD}}"
+            "CONTENT-URL": "{{museum.CONTENT_URL}}"
+            "TELEFONO": "{{museum.TELEFONO}}"
+            "EMAIL": "{{museum.EMAIL}}"
+            "LATITUDE": "{{museum.LATITUD}}"
+            "LONGITUDE": "{{museum.LONGITUD}}"
+            "DISTRITO": "{{museum.DISTRITO}}"
+            "PROVINCIA": "{{museum.PROVINCIA}}"
+            "ACCESIBILIDAD": "{{museum.ACCESIBILIDAD}}"
+            "CODIGO-POSTAL": "{{museum.CODIGO_POSTAL}}"
+        },
+        {% endfor %}
+    }
+}

@@ -10,6 +10,7 @@
     {% if auth == True %}
         <a href="/logout"><font color="white">Logout</font></a>
     {%endif%}
+    <a href="/user_id/xml"><font color="white">UserPage.xml</font></a>
     <a href="/about"><font color="white">About</font></a>
 </header>
 
@@ -33,7 +34,7 @@
             <option value='white'>White</option>
             <option value='pink'>Pink</option>
             <option value='orange'>Orange</option>
-            <option value='#641f1f'>Default</option>
+            <option value='#e99292'>Default</option>
         </select>
         <input type='submit' value='Send'>
     </form>

@@ -1,0 +1,21 @@
+{
+    "Canal JSON de {{user}}"
+    "museums": {
+        {% for user_museum in user_museums%}
+        {
+            "ID_ENTIDAD": "{{user_museum.museum.ID_ENTIDAD}}"
+            "NOMBRE": "{{user_museum.museum.NOMBRE}}"
+            "DESCRIPCION-ENTIDAD": "{{user_museum.museum.DESCRIPCION_ENTIDAD}}"
+            "CONTENT-URL": "{{user_museum.museum.CONTENT_URL}}"
+            "TELEFONO": "{{user_museum.museum.TELEFONO}}"
+            "EMAIL": "{{user_museum.museum.EMAIL}}"
+            "LATITUDE": "{{user_museum.museum.LATITUD}}"
+            "LONGITUDE": "{{user_museum.museum.LONGITUD}}"
+            "DISTRITO": "{{user_museum.museum.DISTRITO}}"
+            "PROVINCIA": "{{user_museum.museum.PROVINCIA}}"
+            "ACCESIBILIDAD": "{{user_museum.museum.ACCESIBILIDAD}}"
+            "CODIGO-POSTAL": "{{user_museum.museum.CODIGO_POSTAL}}"
+        },
+        {% endfor %}
+    }
+}

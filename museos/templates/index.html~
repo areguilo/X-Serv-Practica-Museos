@@ -1,5 +1,9 @@
 <!DOCTYPE html">
 {% load staticfiles %}
+{% load i18n %}
+
+
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
@@ -23,6 +27,7 @@
             position: absolute;
             top: 200px;
             left: 800px;
+            width:30%;
             border: 10px solid #641f1f;
             background: #641f1f;
             color: white;
@@ -45,6 +50,7 @@
             right: 0;
             bottom: 0;
             width: 100%;
+            color: white;
             background-color: #641f1f;
             font-family: "Times New Roman", Times, serif;
         }
@@ -94,6 +100,7 @@
     
     <body bgcolor=#e99292>
         <div class = "cuerpo">
+            <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/png"/>
             <img id = "banner" src = "{%static 'museos_icono.png' %}"/>
 
      

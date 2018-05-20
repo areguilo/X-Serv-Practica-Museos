@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <Contenidos>
+        <infoDataset>
+            <nombre>Canal XML de {{user}}</nombre>
+        </infoDataset>
+        {% for user_museum in user_museums %}
+            <contenido>
+                <tipo>EntidadesYOrganismos</tipo>
+                <atributos idioma="es">
+                    <atributo nombre="ID-ENTIDAD">{{user_museum.museum.ID_ENTIDAD}}</atributo>
+                    <atributo nombre="NOMBRE">{{user_museum.museum.NOMBRE}}</atributo>
+                    <atributo nombre="DESCRIPCION-ENTIDAD">{{user_museum.museum.descripcion_entidad}}</atributo>
+                    <atributo nombre="HORARIO">{{user_museum.museum.HORARIO}}</atributo>
+                    <atributo nombre="EQUIPAMIENTO">{{user_museum.museum.EQUIPAMIENTO}}</atributo>
+                    <atributo nombre="TRANSPORTE">{{user_museum.museum.TRANSPORTE}}</atributo>
+                    <atributo nombre="DESCRIPCION">{{user_museum.museum.DESCRIPCION}}</atributo>
+                    <atributo nombre="ACCESIBILIDAD">{{user_museum.museum.ACCESIBILIDAD}}</atributo>
+                    <atributo nombre="CONTENT-URL">{{user_museum.museum.CONTENT_URL}}</atributo>
+                    <atributo nombre="TRANSPORTE">{{user_museum.museum.TRANSPORTE}}</atributo>
+                    <atributo nombre="LOCALIZACION">
+                        <atributo nombre="NOMBRE-VIA">{{user_museum.museum.NOMBRE_VIA}}</atributo>
+                        <atributo nombre="CLASE-VIAL">{{user_museum.museum.CLASE_VIAL}}</atributo>
+                        <atributo nombre="TIPO-NUM">{{user_museum.museum.TIPO_NUM}}</atributo>
+                        <atributo nombre="NUM">{{user_museum.museum.NUM}}</atributo>
+                        <atributo nombre="PLANTA">{{user_museum.museum.PLANTA}}</atributo>
+                        <atributo nombre="ORIENTACION">{{user_museum.museum.ORIENTACION}}</atributo>
+                        <atributo nombre="LOCALIDAD">{{user_museum.museum.LOCALIDAD}}</atributo>
+                        <atributo nombre="PROVINCIA">{{user_museum.museum.PROVINCIA}}</atributo>
+                        <atributo nombre="CODIGO-POSTAL">{{user_museum.museum.CODIGO_POSTAL}}</atributo>
+                        <atributo nombre="BARRIO">{{user_museum.museum.BARRIO}}</atributo>
+                        <atributo nombre="DISTRITO">{{user_museum.museum.DISTRITO}}</atributo>
+                        <atributo nombre="COORDENADA-X">{{user_museum.museum.X}}</atributo>
+                        <atributo nombre="COORDENADA-Y">{{user_museum.museum.Y}}</atributo>
+                        <atributo nombre="LATITUD">{{user_museum.museum.LATITUD}}</atributo>
+                        <atributo nombre="LONGITUD">{{user_museum.museum.LONGITUD}}</atributo>
+                    </atributo>
+                    <atributo nombre="DATOSCONTACTOS">
+                        <atributo nombre="TELEFONO">{{user_museum.museum.TELEFONO}}</atributo>
+                        <atributo nombre="FAX">{{user_museum.museum.FAX}}</atributo>
+                        <atributo nombre="EMAIL">{{user_museum.museum.EMAIL}}</atributo>
+                    </atributo>
+                </atributos>
+            </contenido>
+            {% endfor %}
+</Contenidos>
