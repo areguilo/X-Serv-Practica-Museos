@@ -84,10 +84,7 @@ header.indice{
     height: 200px;
 }
 
-.cuerpo{
-    background: {{color}};
-    font-size: {{size}}; 
-}
+
 
 div.map {
     position: absolute;
