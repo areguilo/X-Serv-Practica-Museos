@@ -1,3 +1,4 @@
+- ALEJANDRO REGUILÓN ESCALONA
 - INGENIERÍA EN SISTEMAS DE TELECOMUNICACIÓN
 - cuenta laboratorio: areguilo
 - usuario Github: areguilo
