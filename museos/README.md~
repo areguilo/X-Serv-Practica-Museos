@@ -1,0 +1,7 @@
+- INGENIERÍA EN SISTEMAS DE TELECOMUNICACIÓN
+- cuenta laboratorio: areguilo
+- usuario Github: areguilo
+- funcionalidad obligatoria completa
+- favicon.ico, JSON, xml en la Main Page, javascript con Maps, canal RSS de mensajes, login propio sin django admin 
+- parte obligatoria: https://www.youtube.com/watch?v=ISZApyE74dM
+- parte opcional : https://www.youtube.com/watch?v=Xt3rCrQsZRM
