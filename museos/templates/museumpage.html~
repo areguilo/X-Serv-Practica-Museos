@@ -15,7 +15,7 @@
         <h4>{{response | safe}}</h4>
     
     </div>
-<div id="map" style="width:400px;height:400px;background:yellow"></div>
+<div id="map" class="map" style="width:400px;height:400px;background:yellow"></div>
 <script>
 function myMap() {
     var aux = "{{museum.LATITUD}}".replace(",",".")
